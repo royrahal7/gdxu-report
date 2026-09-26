@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GDXU weekly risk</title>
+<style>
+:root{--bg:#EDEFEF;--ink:#1D2733;--muted:#5E6B78;--gold:#A97C14;--gold2:rgba(169,124,20,.16);
+--gold3:rgba(169,124,20,.34);--down:#A83A32;--up:#2E6E6A;--rule:#C9CFD4;--field:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#12171D;--ink:#E3E7EB;--muted:#9AA5B1;--gold:#D7A93B;
+--gold2:rgba(215,169,59,.14);--gold3:rgba(215,169,59,.32);--down:#E07A6E;--up:#6FB3AD;--rule:#2A333D;--field:#1A2129}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,"Segoe UI",sans-serif;
+font-variant-numeric:tabular-nums}
+main{max-width:880px;margin:0 auto;padding:40px 20px 80px}
+h1,h2,.big{font-family:Charter,"Sitka Text",Cambria,Georgia,serif;font-weight:600}
+h1{font-size:1.1rem;margin:0;color:var(--muted);font-weight:500}
+.big{font-size:3.4rem;line-height:1.05;margin:6px 0 4px}
+h2{font-size:1.45rem;margin:0 0 6px}
+section{padding:36px 0;border-top:1px solid var(--rule)}
+header{padding-bottom:28px}
+p{margin:.4em 0;max-width:68ch}
+.muted{color:var(--muted)}
+.flag{display:inline-block;margin-top:10px;padding:6px 12px;border-left:3px solid var(--gold);
+background:var(--gold2)}
+svg{width:100%;height:auto;display:block;overflow:visible}
+svg text{fill:var(--muted);font-size:12px;font-family:system-ui,sans-serif}
+svg .lbl{fill:var(--ink);font-size:13px;font-weight:600}
+.row{display:flex;gap:24px;flex-wrap:wrap;margin:14px 0}
+label{display:block;font-size:.9rem;color:var(--muted);margin-bottom:4px}
+input[type=number]{font:inherit;padding:8px 10px;width:200px;background:var(--field);color:var(--ink);
+border:1px solid var(--rule);border-radius:4px}
+input[type=range]{width:100%;accent-color:var(--gold)}
+input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.out{font-size:1.1rem;margin-top:10px}
+.out b{font-family:Charter,"Sitka Text",Cambria,Georgia,serif;font-size:1.25rem}
+.dn{color:var(--down)}.upc{color:var(--up)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+.tbl{overflow-x:auto}
+th,td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--rule);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:500}
+</style></head><body><main>
+<header>
+<h1>GDXU weekly risk, data as of <span id="asof"></span></h1>
+<div class="big" id="price"></div>
+<p id="summary"></p>
+<div id="flag"></div>
+</header>
+
+<section>
+<h2>Where GDXU could close by <span id="weekEnd"></span></h2>
+<p class="muted">The dark band holds half of likely outcomes, the light band eight in ten.
+The red line is how low it could dip during a rough week, one week in ten.</p>
+<svg id="ruler" viewBox="0 0 760 150" role="img" aria-label="Range of likely closing prices"></svg>
+</section>
+
+<section>
+<h2>The last six months and the week ahead</h2>
+<svg id="chart" viewBox="0 0 760 300" role="img" aria-label="GDXU price history with forecast band"></svg>
+</section>
+
+<section>
+<h2>If gold moves</h2>
+<p class="muted" id="goldIntro"></p>
+<label for="goldSlider">Gold price in two weeks: <b id="goldVal"></b></label>
+<input type="range" id="goldSlider">
+<div class="out" id="goldOut"></div>
+</section>
+
+<section>
+<h2>Size a position</h2>
+<div class="row">
+<div><label for="pos">Position value ($)</label><input type="number" id="pos" value="10000" min="0" step="500"></div>
+<div><label for="maxLoss">Largest weekly loss you would accept ($)</label>
+<input type="number" id="maxLoss" value="1000" min="0" step="100"></div>
+</div>
+<div class="out" id="sizeOut"></div>
+</section>
+
+<section>
+<h2>Track record</h2>
+<p class="muted" id="logSummary"></p>
+<div class="tbl"><table id="logTable"></table></div>
+</section>
+
+<section>
+<h2>What this can and cannot tell you</h2>
+<p>It forecasts how far GDXU is likely to move, not which way. Three direction models and
+eleven gold price-level signals were tested on up to twenty years of data, and none beat chance.</p>
+<p id="dragNote"></p>
+<p>The range will be wrong about one week in five, and rare events such as an early
+redemption of the note sit outside any model.</p>
+</section>
+</main>
+<script>
+const D = {"asof": "Friday 25 September 2026 (page updated 26 Sep 10:40 UTC)", "weekEnd": "Friday 02 October", "price": 127.75, "vol": 0.17541025912893998, "closeQ": [97.34303285772393, 110.58638616284982, 127.06539959598872, 144.46345402900954, 162.08625830574138], "lowQ": [94.83792586659196, 106.2655492689649, 117.20760979707673], "zq": [-1.5497044993301652, -0.8225188141226225, -0.030632858923196143, 0.7009358163953343, 1.357123718431865], "events": ["NFP on Fri 02 Oct"], "history": {"dates": ["23 Mar", "24 Mar", "25 Mar", "26 Mar", "27 Mar", "30 Mar", "31 Mar", "01 Apr", "02 Apr", "06 Apr", "07 Apr", "08 Apr", "09 Apr", "10 Apr", "13 Apr", "14 Apr", "15 Apr", "16 Apr", "17 Apr", "20 Apr", "21 Apr", "22 Apr", "23 Apr", "24 Apr", "27 Apr", "28 Apr", "29 Apr", "30 Apr", "01 May", "04 May", "05 May", "06 May", "07 May", "08 May", "11 May", "12 May", "13 May", "14 May", "15 May", "18 May", "19 May", "20 May", "21 May", "22 May", "26 May", "27 May", "28 May", "29 May", "01 Jun", "02 Jun", "03 Jun", "04 Jun", "05 Jun", "08 Jun", "09 Jun", "10 Jun", "11 Jun", "12 Jun", "15 Jun", "16 Jun", "17 Jun", "18 Jun", "22 Jun", "23 Jun", "24 Jun", "25 Jun", "26 Jun", "29 Jun", "30 Jun", "01 Jul", "02 Jul", "06 Jul", "07 Jul", "08 Jul", "09 Jul", "10 Jul", "13 Jul", "14 Jul", "15 Jul", "16 Jul", "17 Jul", "20 Jul", "21 Jul", "22 Jul", "23 Jul", "24 Jul", "27 Jul", "28 Jul", "29 Jul", "30 Jul", "31 Jul", "03 Aug", "04 Aug", "05 Aug", "06 Aug", "07 Aug", "10 Aug", "11 Aug", "12 Aug", "13 Aug", "14 Aug", "17 Aug", "18 Aug", "19 Aug", "20 Aug", "21 Aug", "24 Aug", "25 Aug", "26 Aug", "27 Aug", "28 Aug", "31 Aug", "01 Sep", "02 Sep", "03 Sep", "04 Sep", "08 Sep", "09 Sep", "10 Sep", "11 Sep", "14 Sep", "15 Sep", "16 Sep", "17 Sep", "18 Sep", "21 Sep", "22 Sep", "23 Sep", "24 Sep", "25 Sep"], "values": [158.23, 158.76, 173.73, 147.95, 165.95, 165.94, 201.39, 228.82, 218.02, 212.12, 219.38, 242.61, 243.52, 250.66, 247.05, 262.94, 242.61, 239.97, 260.56, 250.23, 204.0, 213.67, 197.37, 208.87, 197.75, 172.14, 158.02, 169.79, 162.96, 154.3, 154.69, 191.09, 187.66, 203.99, 223.05, 220.97, 214.9, 199.65, 157.47, 155.0, 136.55, 148.48, 145.95, 141.26, 158.34, 142.14, 150.11, 163.35, 147.69, 153.2, 136.92, 142.26, 104.19, 103.63, 98.72, 84.16, 98.5, 107.21, 128.47, 137.59, 122.95, 114.28, 109.97, 94.22, 82.63, 86.64, 91.5, 86.5, 85.27, 84.75, 95.79, 97.23, 85.53, 77.63, 84.99, 84.01, 76.65, 81.57, 78.44, 69.89, 69.14, 67.54, 77.94, 86.03, 79.61, 80.03, 81.92, 77.13, 74.66, 83.74, 75.01, 81.08, 87.5, 107.14, 107.57, 130.43, 133.31, 131.72, 135.24, 123.34, 130.14, 138.29, 124.17, 158.63, 170.52, 185.17, 188.62, 199.03, 182.4, 189.93, 166.45, 161.17, 141.33, 156.0, 173.82, 161.91, 157.49, 162.05, 145.0, 149.3, 135.37, 134.27, 127.9, 142.61, 141.51, 136.27, 151.51, 131.07, 125.17, 127.75]}, "futureDates": ["28 Sep", "29 Sep", "30 Sep", "01 Oct", "02 Oct"], "gold": {"now": 4321.2001953125, "gvz": 0.22440000534057616, "alpha": -0.0013077171540843407, "beta": 1.6590297663112175, "r2": 0.6814458877608729, "q": [-0.052197329615479175, 0.004441777664266414, 0.05548629052532874], "decay": 0.02239056323847086, "drag": 0.007761405246015032, "days": 10}, "bigWeek": {"flag": false, "ret": -0.0237144706054071, "thr": 0.02022940362557879, "rank": 0.12535344015080113}, "dragYear": 0.1776485431273308, "log": [{"asof": "2026-09-25", "price": 127.75, "p10": 97.34, "p90": 162.09, "low10": 94.84, "big": false, "close5": null, "low5": null, "in_range": null, "low_held": null, "ret2w": null}]};
+const $ = id => document.getElementById(id);
+const usd = v => "$" + v.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const pc = v => (v >= 0 ? "+" : "") + (v * 100).toFixed(1) + "%";
+const svgNS = "http://www.w3.org/2000/svg";
+function el(svg, tag, attrs, text) {
+  const e = document.createElementNS(svgNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text !== undefined) e.textContent = text;
+  svg.appendChild(e); return e;
+}
+function erf(x) {
+  const s = Math.sign(x); x = Math.abs(x);
+  const t = 1 / (1 + 0.3275911 * x);
+  const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x);
+  return s * y;
+}
+const ncdf = x => 0.5 * (1 + erf(x / Math.SQRT2));
+
+$("asof").textContent = D.asof;
+$("price").textContent = usd(D.price);
+$("weekEnd").textContent = D.weekEnd;
+const ev = D.events.length ? "Scheduled this week: " + D.events.join(", ") + "." : "No major scheduled releases this week.";
+$("summary").textContent = "Expected size of a typical 5-day move: about " + (D.vol * 100).toFixed(0) +
+  "% either way. Direction is treated as a coin flip. " + ev;
+if (D.bigWeek.flag) {
+  $("flag").innerHTML = '<div class="flag">Gold just had one of its strongest weeks (' + pc(D.bigWeek.ret) +
+    ', better than ' + (D.bigWeek.rank * 100).toFixed(0) + '% of weeks since 2006). Historically GDXU has tended ' +
+    'to give back ground after such weeks. This is an untested pattern being tracked below, not a signal.</div>';
+}
+
+// ---- ruler ----
+(function () {
+  const s = $("ruler"), q = D.closeQ, lowQ = D.lowQ;
+  const lo = Math.min(lowQ[0], q[0]) * 0.96, hi = q[4] * 1.04;
+  const X = v => 20 + (v - lo) / (hi - lo) * 720;
+  const step = [1, 2, 5, 10, 20, 25, 50].find(st => (hi - lo) / st <= 10) || 100;
+  el(s, "line", {x1: 20, x2: 740, y1: 110, y2: 110, stroke: "var(--rule)"});
+  for (let t = Math.ceil(lo / step) * step; t <= hi; t += step) {
+    el(s, "line", {x1: X(t), x2: X(t), y1: 106, y2: 114, stroke: "var(--muted)"});
+    el(s, "text", {x: X(t), y: 132, "text-anchor": "middle"}, "$" + t);
+  }
+  el(s, "rect", {x: X(q[0]), y: 52, width: X(q[4]) - X(q[0]), height: 46, fill: "var(--gold2)"});
+  el(s, "rect", {x: X(q[1]), y: 52, width: X(q[3]) - X(q[1]), height: 46, fill: "var(--gold3)"});
+  el(s, "line", {x1: X(q[2]), x2: X(q[2]), y1: 48, y2: 102, stroke: "var(--gold)", "stroke-width": 2});
+  el(s, "line", {x1: X(lowQ[0]), x2: X(lowQ[0]), y1: 40, y2: 110, stroke: "var(--down)",
+    "stroke-width": 2, "stroke-dasharray": "4 3"});
+  el(s, "text", {x: X(lowQ[0]), y: 32, "text-anchor": "middle", class: "lbl", fill: "var(--down)"}, usd(lowQ[0]));
+  el(s, "line", {x1: X(D.price), x2: X(D.price), y1: 44, y2: 110, stroke: "var(--ink)", "stroke-width": 2});
+  el(s, "text", {x: X(D.price), y: 16, "text-anchor": "middle", class: "lbl"}, "Now " + usd(D.price));
+  [[q[0], "start"], [q[4], "end"]].forEach(([v, a]) =>
+    el(s, "text", {x: X(v), y: 148, "text-anchor": a === "start" ? "start" : "end", class: "lbl"}, usd(v)));
+})();
+
+// ---- chart ----
+(function () {
+  const s = $("chart"), h = D.history.values, n = h.length, k = D.futureDates.length;
+  const band = [];
+  for (let i = 1; i <= k; i++) band.push(D.zq.map(z => D.price * Math.exp(z * D.vol * Math.sqrt(i / k))));
+  const all = h.concat(band.flat());
+  const lo = Math.min(...all) * 0.97, hi = Math.max(...all) * 1.03;
+  const X = i => i < n ? 50 + i / (n - 1) * 560 : 610 + (i - n + 1) / k * 130;
+  const Y = v => 270 - (v - lo) / (hi - lo) * 250;
+  for (let j = 0; j <= 4; j++) {
+    const v = lo + (hi - lo) * j / 4;
+    el(s, "line", {x1: 50, x2: 740, y1: Y(v), y2: Y(v), stroke: "var(--rule)"});
+    el(s, "text", {x: 44, y: Y(v) + 4, "text-anchor": "end"}, "$" + v.toFixed(0));
+  }
+  for (let i = 0; i < n - 15; i += 25) el(s, "text", {x: X(i), y: 292, "text-anchor": "middle"}, D.history.dates[i]);
+  el(s, "text", {x: X(n - 1), y: 292, "text-anchor": "middle"}, D.history.dates[n - 1]);
+  el(s, "line", {x1: X(n - 1), x2: X(n - 1), y1: 20, y2: 270, stroke: "var(--rule)", "stroke-dasharray": "3 3"});
+  el(s, "text", {x: X(n + k - 1), y: 292, "text-anchor": "end"}, D.futureDates[k - 1]);
+  const poly = (a, b) => {
+    const top = [[X(n - 1), Y(D.price)]].concat(band.map((r, i) => [X(n + i), Y(r[b])]));
+    const bot = band.map((r, i) => [X(n + i), Y(r[a])]).reverse().concat([[X(n - 1), Y(D.price)]]);
+    return top.concat(bot).map(p => p.join(",")).join(" ");
+  };
+  el(s, "polygon", {points: poly(0, 4), fill: "var(--gold2)"});
+  el(s, "polygon", {points: poly(1, 3), fill: "var(--gold3)"});
+  el(s, "polyline", {points: h.map((v, i) => X(i) + "," + Y(v)).join(" "), fill: "none",
+    stroke: "var(--ink)", "stroke-width": 1.8});
+})();
+
+// ---- gold scenarios ----
+(function () {
+  const G = D.gold, sl = $("goldSlider");
+  sl.min = Math.round(G.now * 0.9 / 10) * 10; sl.max = Math.round(G.now * 1.1 / 10) * 10;
+  sl.step = 10; sl.value = Math.round(G.now / 10) * 10;
+  $("goldIntro").textContent = "Gold is at " + usd(G.now) + ". Over the last three years the miners moved about " +
+    G.beta.toFixed(1) + " times as much as gold, and gold explained " + (G.r2 * 100).toFixed(0) +
+    "% of their two-week moves. Drag the slider to see what a given gold price would mean for GDXU.";
+  const sd = G.gvz * Math.sqrt(G.days / 252);
+  function update() {
+    const gp = +sl.value, x = Math.log(gp / G.now), base = G.alpha + G.beta * x;
+    const [lo, mid, hi] = G.q.map(q => D.price * Math.exp(3 * (base + q) - G.decay - G.drag));
+    const chance = 1 - ncdf((x + sd * sd / 2) / sd);
+    $("goldVal").textContent = usd(gp) + " (" + pc(gp / G.now - 1) + ")";
+    $("goldOut").innerHTML = "GDXU would most likely be around <b>" + usd(mid) + "</b> (" + pc(mid / D.price - 1) +
+      "), with eight in ten outcomes between " + usd(lo) + " and " + usd(hi) +
+      ".<br><span class='muted'>The options market puts the chance of gold ending at or above this level at about " +
+      (chance * 100).toFixed(0) + "%.</span>";
+  }
+  sl.addEventListener("input", update); update();
+})();
+
+// ---- position sizing ----
+(function () {
+  const bad = D.closeQ[0] / D.price - 1, dip = D.lowQ[0] / D.price - 1;
+  function update() {
+    const pos = +$("pos").value || 0, ml = +$("maxLoss").value || 0;
+    const fit = ml / Math.abs(bad);
+    $("sizeOut").innerHTML = "In a bad week (one in ten), " + usd(pos) + " could close the week down about <b class='dn'>" +
+      usd(pos * Math.abs(bad)) + "</b> (" + pc(bad) + "), and could dip as far as " + usd(pos * Math.abs(dip)) +
+      " below its value along the way.<br>To keep a one-in-ten week under " + usd(ml) +
+      ", the position would need to be about <b>" + usd(fit) + "</b> or less at this week's volatility.";
+  }
+  ["pos", "maxLoss"].forEach(id => $(id).addEventListener("input", update)); update();
+})();
+
+// ---- track record ----
+(function () {
+  const done = D.log.filter(r => r.close5 !== null);
+  if (!done.length) {
+    $("logSummary").textContent = "No forecasts scored yet. Each weekly run is logged and scored once five trading days have passed.";
+  } else {
+    const inR = done.filter(r => r.in_range).length, held = done.filter(r => r.low_held).length;
+    let txt = "Scored weeks: " + done.length + ". Closed inside the eight-in-ten band: " + inR + " (" +
+      (inR / done.length * 100).toFixed(0) + "%, target 80%). Dip stayed above the red line: " + held + " (" +
+      (held / done.length * 100).toFixed(0) + "%, target 90%).";
+    const two = D.log.filter(r => r.ret2w !== null), bigs = two.filter(r => r.big), rest = two.filter(r => !r.big);
+    if (bigs.length && rest.length) {
+      const avg = a => a.reduce((s, r) => s + r.ret2w, 0) / a.length;
+      txt += " After big gold weeks GDXU averaged " + pc(avg(bigs)) + " over two weeks (" + bigs.length +
+        " cases) versus " + pc(avg(rest)) + " otherwise.";
+    }
+    $("logSummary").textContent = txt;
+  }
+  const head = "<tr><th>Week of</th><th>Price</th><th>8-in-10 band</th><th>Close 5 days later</th><th>Dip floor</th><th>Lowest close</th></tr>";
+  const rows = D.log.slice().reverse().slice(0, 12).map(r => "<tr><td>" + r.asof + (r.big ? " *" : "") + "</td><td>" +
+    usd(r.price) + "</td><td>" + usd(r.p10) + " to " + usd(r.p90) + "</td><td>" +
+    (r.close5 === null ? "pending" : "<span class='" + (r.in_range ? "upc" : "dn") + "'>" + usd(r.close5) + "</span>") +
+    "</td><td>" + usd(r.low10) + "</td><td>" +
+    (r.low5 === null ? "pending" : "<span class='" + (r.low_held ? "upc" : "dn") + "'>" + usd(r.low5) + "</span>") +
+    "</td></tr>");
+  $("logTable").innerHTML = head + rows.join("");
+})();
+$("dragNote").textContent = "Holding GDXU has cost about " + (D.dragYear * 100).toFixed(0) +
+  "% a year compared with three times the index, on top of the losses leverage suffers when prices swing. " +
+  "It is built for short holds.";
+</script></body></html>
