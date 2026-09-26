@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: python gdxu_report.py
+      - run: python build_report.py
       - name: Save the updated page
         run: |
           git config user.name "github-actions"
