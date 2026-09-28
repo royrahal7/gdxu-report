@@ -70,6 +70,14 @@ th{color:var(--muted);font-weight:500}
 <p id="lastMove"></p>
 </section>
 
+<section id="brkSection">
+<h2>Breakout watch <span class="muted" style="font-size:1rem;font-weight:500">live experiment</span></h2>
+<p class="muted" id="brkIntro"></p>
+<div id="brkNow"></div>
+<p id="brkScore"></p>
+<div class="tbl"><table id="brkTable"></table></div>
+</section>
+
 <section>
 <h2>Daily track record</h2>
 <p class="muted" id="dayLogSummary"></p>
@@ -128,7 +136,7 @@ redemption of the note sit outside any model.</p>
 </section>
 </main>
 <script>
-const D = {"asof": "Friday 25 September 2026", "updated": "28 Sep 10:06 UTC", "weekEnd": "Friday 02 October", "price": 127.75, "vol": 0.17541056730501756, "closeQ": [97.34295988242978, 110.58631895489965, 127.06538730971519, 144.46351412599904, 162.08634676819005], "lowQ": [94.8378584650749, 106.26549961031864, 117.20762283301218], "zq": [-1.549706050490379, -0.822520833734066, -0.030633356340258315, 0.7009369565181865, 1.3571244455299227], "events": ["NFP on Fri 02 Oct"], "history": {"dates": ["23 Mar", "24 Mar", "25 Mar", "26 Mar", "27 Mar", "30 Mar", "31 Mar", "01 Apr", "02 Apr", "06 Apr", "07 Apr", "08 Apr", "09 Apr", "10 Apr", "13 Apr", "14 Apr", "15 Apr", "16 Apr", "17 Apr", "20 Apr", "21 Apr", "22 Apr", "23 Apr", "24 Apr", "27 Apr", "28 Apr", "29 Apr", "30 Apr", "01 May", "04 May", "05 May", "06 May", "07 May", "08 May", "11 May", "12 May", "13 May", "14 May", "15 May", "18 May", "19 May", "20 May", "21 May", "22 May", "26 May", "27 May", "28 May", "29 May", "01 Jun", "02 Jun", "03 Jun", "04 Jun", "05 Jun", "08 Jun", "09 Jun", "10 Jun", "11 Jun", "12 Jun", "15 Jun", "16 Jun", "17 Jun", "18 Jun", "22 Jun", "23 Jun", "24 Jun", "25 Jun", "26 Jun", "29 Jun", "30 Jun", "01 Jul", "02 Jul", "06 Jul", "07 Jul", "08 Jul", "09 Jul", "10 Jul", "13 Jul", "14 Jul", "15 Jul", "16 Jul", "17 Jul", "20 Jul", "21 Jul", "22 Jul", "23 Jul", "24 Jul", "27 Jul", "28 Jul", "29 Jul", "30 Jul", "31 Jul", "03 Aug", "04 Aug", "05 Aug", "06 Aug", "07 Aug", "10 Aug", "11 Aug", "12 Aug", "13 Aug", "14 Aug", "17 Aug", "18 Aug", "19 Aug", "20 Aug", "21 Aug", "24 Aug", "25 Aug", "26 Aug", "27 Aug", "28 Aug", "31 Aug", "01 Sep", "02 Sep", "03 Sep", "04 Sep", "08 Sep", "09 Sep", "10 Sep", "11 Sep", "14 Sep", "15 Sep", "16 Sep", "17 Sep", "18 Sep", "21 Sep", "22 Sep", "23 Sep", "24 Sep", "25 Sep"], "values": [158.23, 158.76, 173.73, 147.95, 165.95, 165.94, 201.39, 228.82, 218.02, 212.12, 219.38, 242.61, 243.52, 250.66, 247.05, 262.94, 242.61, 239.97, 260.56, 250.23, 204.0, 213.67, 197.37, 208.87, 197.75, 172.14, 158.02, 169.79, 162.96, 154.3, 154.69, 191.09, 187.66, 203.99, 223.05, 220.97, 214.9, 199.65, 157.47, 155.0, 136.55, 148.48, 145.95, 141.26, 158.34, 142.14, 150.11, 163.35, 147.69, 153.2, 136.92, 142.26, 104.19, 103.63, 98.72, 84.16, 98.5, 107.21, 128.47, 137.59, 122.95, 114.28, 109.97, 94.22, 82.63, 86.64, 91.5, 86.5, 85.27, 84.75, 95.79, 97.23, 85.53, 77.63, 84.99, 84.01, 76.65, 81.57, 78.44, 69.89, 69.14, 67.54, 77.94, 86.03, 79.61, 80.03, 81.92, 77.13, 74.66, 83.74, 75.01, 81.08, 87.5, 107.14, 107.57, 130.43, 133.31, 131.72, 135.24, 123.34, 130.14, 138.29, 124.17, 158.63, 170.52, 185.17, 188.62, 199.03, 182.4, 189.93, 166.45, 161.17, 141.33, 156.0, 173.82, 161.91, 157.49, 162.05, 145.0, 149.3, 135.37, 134.27, 127.9, 142.61, 141.51, 136.27, 151.51, 131.07, 125.17, 127.75]}, "futureDates": ["28 Sep", "29 Sep", "30 Sep", "01 Oct", "02 Oct"], "gold": {"now": 4321.2001953125, "gvz": 0.22440000534057616, "alpha": -0.0013077157620357597, "beta": 1.6590297000631795, "r2": 0.6814458536742041, "q": [-0.05219733176057482, 0.004441727584319652, 0.05548629059649469], "decay": 0.02239056323847086, "drag": 0.007761400406723664, "days": 10}, "bigWeek": {"flag": false, "ret": -0.0237144706054071, "thr": 0.02022940362557879, "rank": 0.12535344015080113}, "dragYear": 0.17764844284144743, "log": [{"asof": "2026-09-25", "price": 127.75, "p10": 97.34, "p90": 162.09, "low10": 94.84, "big": false, "close5": null, "low5": null, "in_range": null, "low_held": null, "ret2w": null}], "day": {"target": "Monday 28 September", "q": [100.48849413881811, 105.22804984457599, 109.06856880768036, 113.9442841793776, 118.55669635253372], "vol": 0.04293488829700135, "events": [], "live": null, "pre": {"goldMove": -0.031988142934384456, "goldNow": 4188.2001953125, "goldTime": "Mon 05:00", "open": 109.70819687204104, "openLo": 106.45044892507826, "openHi": 112.12431187757079, "beta": 4.657504674086809}, "lastDate": "Friday 25 September", "lastMove": 0.02061198265396147, "biggerThan": 0.19771369186801765, "log": [{"target": "Mon 28 Sep", "price": 127.75, "p10": 100.49, "p90": 118.56, "close": null, "in80": null, "in50": null}]}};
+const D = {"asof": "Friday 25 September 2026", "updated": "28 Sep 11:14 UTC", "weekEnd": "Friday 02 October", "price": 127.75, "vol": 0.1754103030362569, "closeQ": [97.34299934209065, 110.58637406328666, 127.06541732765749, 144.46345328277314, 162.08630736390316], "lowQ": [94.83791644520713, 106.26556894209993, 117.20759013016755], "zq": [-1.5497060742723157, -0.8225192319896659, -0.030632055705981917, 0.700935611494125, 1.3571251042073316], "events": ["NFP on Fri 02 Oct"], "history": {"dates": ["23 Mar", "24 Mar", "25 Mar", "26 Mar", "27 Mar", "30 Mar", "31 Mar", "01 Apr", "02 Apr", "06 Apr", "07 Apr", "08 Apr", "09 Apr", "10 Apr", "13 Apr", "14 Apr", "15 Apr", "16 Apr", "17 Apr", "20 Apr", "21 Apr", "22 Apr", "23 Apr", "24 Apr", "27 Apr", "28 Apr", "29 Apr", "30 Apr", "01 May", "04 May", "05 May", "06 May", "07 May", "08 May", "11 May", "12 May", "13 May", "14 May", "15 May", "18 May", "19 May", "20 May", "21 May", "22 May", "26 May", "27 May", "28 May", "29 May", "01 Jun", "02 Jun", "03 Jun", "04 Jun", "05 Jun", "08 Jun", "09 Jun", "10 Jun", "11 Jun", "12 Jun", "15 Jun", "16 Jun", "17 Jun", "18 Jun", "22 Jun", "23 Jun", "24 Jun", "25 Jun", "26 Jun", "29 Jun", "30 Jun", "01 Jul", "02 Jul", "06 Jul", "07 Jul", "08 Jul", "09 Jul", "10 Jul", "13 Jul", "14 Jul", "15 Jul", "16 Jul", "17 Jul", "20 Jul", "21 Jul", "22 Jul", "23 Jul", "24 Jul", "27 Jul", "28 Jul", "29 Jul", "30 Jul", "31 Jul", "03 Aug", "04 Aug", "05 Aug", "06 Aug", "07 Aug", "10 Aug", "11 Aug", "12 Aug", "13 Aug", "14 Aug", "17 Aug", "18 Aug", "19 Aug", "20 Aug", "21 Aug", "24 Aug", "25 Aug", "26 Aug", "27 Aug", "28 Aug", "31 Aug", "01 Sep", "02 Sep", "03 Sep", "04 Sep", "08 Sep", "09 Sep", "10 Sep", "11 Sep", "14 Sep", "15 Sep", "16 Sep", "17 Sep", "18 Sep", "21 Sep", "22 Sep", "23 Sep", "24 Sep", "25 Sep"], "values": [158.23, 158.76, 173.73, 147.95, 165.95, 165.94, 201.39, 228.82, 218.02, 212.12, 219.38, 242.61, 243.52, 250.66, 247.05, 262.94, 242.61, 239.97, 260.56, 250.23, 204.0, 213.67, 197.37, 208.87, 197.75, 172.14, 158.02, 169.79, 162.96, 154.3, 154.69, 191.09, 187.66, 203.99, 223.05, 220.97, 214.9, 199.65, 157.47, 155.0, 136.55, 148.48, 145.95, 141.26, 158.34, 142.14, 150.11, 163.35, 147.69, 153.2, 136.92, 142.26, 104.19, 103.63, 98.72, 84.16, 98.5, 107.21, 128.47, 137.59, 122.95, 114.28, 109.97, 94.22, 82.63, 86.64, 91.5, 86.5, 85.27, 84.75, 95.79, 97.23, 85.53, 77.63, 84.99, 84.01, 76.65, 81.57, 78.44, 69.89, 69.14, 67.54, 77.94, 86.03, 79.61, 80.03, 81.92, 77.13, 74.66, 83.74, 75.01, 81.08, 87.5, 107.14, 107.57, 130.43, 133.31, 131.72, 135.24, 123.34, 130.14, 138.29, 124.17, 158.63, 170.52, 185.17, 188.62, 199.03, 182.4, 189.93, 166.45, 161.17, 141.33, 156.0, 173.82, 161.91, 157.49, 162.05, 145.0, 149.3, 135.37, 134.27, 127.9, 142.61, 141.51, 136.27, 151.51, 131.07, 125.17, 127.75]}, "futureDates": ["28 Sep", "29 Sep", "30 Sep", "01 Oct", "02 Oct"], "gold": {"now": 4321.2001953125, "gvz": 0.22440000534057616, "alpha": -0.001307717971074141, "beta": 1.65902990569651, "r2": 0.6814459342417591, "q": [-0.052197327038572126, 0.004441729913233909, 0.05548628828321533], "decay": 0.02239056323847086, "drag": 0.007761406803130852, "days": 10}, "bigWeek": {"flag": false, "ret": -0.0237144706054071, "thr": 0.02022940362557879, "rank": 0.12535344015080113}, "dragYear": 0.1776485753958411, "log": [{"asof": "2026-09-25", "price": 127.75, "p10": 97.34, "p90": 162.09, "low10": 94.84, "big": false, "close5": null, "low5": null, "in_range": null, "low_held": null, "ret2w": null}], "brk": {"start": "2026-09-28 09:30", "drift": 0.0010583845643499746, "goldNow": 4182.10009765625, "goldTime": "Mon 07:00", "histN": 271, "histMove": 0.00228711754628637, "watchLevel": 4310.0, "watchTarget": 4360.0, "watchStop": 4260.0, "watchGdxuT": 157.18342366371627, "watchGdxuS": 140.04034036132597, "open": null, "calls": [], "liveN": 0, "liveMove": null, "liveTargets": 0, "liveStops": 0, "liveExpired": 0}, "day": {"target": "Monday 28 September", "q": [99.7927810446566, 104.49952333238825, 108.31345318841221, 113.1554124663739, 117.73589147571822], "vol": 0.04293470085203897, "events": [], "live": null, "pre": {"goldMove": -0.033398048522736534, "goldNow": 4182.10009765625, "goldTime": "Mon 07:00", "open": 108.96595592430849, "openLo": 105.73024857223805, "openHi": 111.36572448041453, "beta": 4.657504674086809}, "lastDate": "Friday 25 September", "lastMove": 0.02061198265396147, "biggerThan": 0.19771369186801765, "log": [{"target": "Mon 28 Sep", "price": 127.75, "p10": 99.79, "p90": 117.74, "close": null, "in80": null, "in50": null}]}};
 const $ = id => document.getElementById(id);
 const usd = v => "$" + v.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
 const pc = v => (v >= 0 ? "+" : "") + (v * 100).toFixed(1) + "%";
@@ -246,6 +254,51 @@ drawRuler($("dayRuler"), D.day.q, null,
     "</td><td>" + usd(r.p10) + " to " + usd(r.p90) + "</td><td>" +
     (r.close === null ? "pending" : "<span class='" + (r.in80 ? "upc" : "dn") + "'>" + usd(r.close) + "</span>") + "</td></tr>");
   $("dayLogTable").innerHTML = head + rows.join("");
+})();
+
+// ---- breakout watch ----
+(function () {
+  const B = D.brk;
+  if (!B) { $("brkSection").hidden = true; return; }
+  const g = v => "$" + Math.round(v).toLocaleString("en-US");
+  $("brkIntro").textContent = "Rule, fixed in advance: when gold closes an hour above the previous day's high, " +
+    "call gold $50 above that level before $50 below it, within 24 hours. In two years of hourly data, gold's " +
+    "24-hour move after such breaks beat its normal drift by a small margin; over 25 years of daily data the " +
+    "pattern disappeared. This is an experiment being scored live, not a trading signal.";
+  if (B.open) {
+    const o = B.open;
+    $("brkNow").innerHTML = '<div class="flag">Open call since ' + o.time + " New York time: gold broke above " +
+      g(o.level) + " (yesterday's high) at " + g(o.entry) + ". Target <b>" + g(o.target) +
+      "</b> (GDXU about " + usd(o.gdxuT) + ") before " + g(o.stop) + " (GDXU about " + usd(o.gdxuS) +
+      "). Expires " + o.expires + ".</div>";
+  } else if (B.watchLevel) {
+    $("brkNow").innerHTML = '<div class="flag">No open call. Gold is at ' + g(B.goldNow) + " (" + B.goldTime +
+      " New York time). If gold closes an hour above <b>" + g(B.watchLevel) + "</b> (yesterday's high), " +
+      "the call is: " + g(B.watchTarget) + " before " + g(B.watchStop) + ", meaning GDXU about <b>" +
+      usd(B.watchGdxuT) + "</b> before about " + usd(B.watchGdxuS) + " at today's prices.</div>";
+  }
+  const drift = pc(B.drift);
+  if (B.liveN < 20) {
+    $("brkScore").textContent = "Live calls since " + B.start + ": " + B.calls.length + " (" + B.liveTargets +
+      " reached target first, " + B.liveStops + " invalidated first, " + B.liveExpired + " expired). " +
+      "Too few to judge yet; about 20 scored calls are needed. For reference, in testing gold moved " +
+      (B.histMove === null ? "n/a" : pc(B.histMove)) + " on average in the 24 hours after a call, versus " +
+      drift + " after any hour.";
+  } else {
+    const edge = B.liveMove - B.drift;
+    $("brkScore").innerHTML = "Live calls since " + B.start + ": " + B.liveN + " scored (" + B.liveTargets +
+      " reached target first, " + B.liveStops + " invalidated first). Gold's average 24-hour move after a call: " +
+      "<b>" + pc(B.liveMove) + "</b>, versus " + drift + " after any hour, an edge of <b class='" +
+      (edge > 0 ? "upc" : "dn") + "'>" + pc(edge) + "</b>.";
+  }
+  if (B.calls.length) {
+    const head = "<tr><th>Call time (NY)</th><th>Level</th><th>Target / invalidation</th><th>Outcome</th><th>24h gold move</th></tr>";
+    const lab = {target: "target first", invalidated: "invalidated", expired: "expired", open: "open", tie: "same hour"};
+    $("brkTable").innerHTML = head + B.calls.slice().reverse().map(c => "<tr><td>" + c.time + "</td><td>" +
+      g(c.level) + "</td><td>" + g(c.target) + " / " + g(c.stop) + "</td><td>" + lab[c.status] + "</td><td>" +
+      (c.move === null ? "pending" : "<span class='" + (c.move > 0 ? "upc" : "dn") + "'>" + pc(c.move) + "</span>") +
+      "</td></tr>").join("");
+  }
 })();
 
 // ---- chart ----
