@@ -2,9 +2,9 @@ name: Update GDXU report
 
 on:
   schedule:
-    - cron: "45 12 * * 1-5"      # pre-open, about 45 minutes before the US open
-    - cron: "40 13-20 * * 1-5"   # hourly while the US market is open (UTC)
-    - cron: "30 22 * * 1-5"      # after the close
+    - cron: "45 12 * * 1-5"       # pre-open
+    - cron: "*/15 13-20 * * 1-5"  # every 15 minutes while the US market is open (UTC)
+    - cron: "30 22 * * 1-5"       # after the close
   workflow_dispatch:
 
 concurrency:
@@ -17,17 +17,20 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - name: Build the page (retries if the Yahoo download fails)
+      - name: Build the page (retries if a download fails)
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: |
           for attempt in 1 2 3; do
             rm -rf ~/.cache/py-yfinance
-            python gdxu_live.py && exit 0
+            python gdxu_pro.py && exit 0
             echo "Attempt $attempt failed, retrying in 30 seconds..."
             sleep 30
           done
@@ -36,7 +39,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add index.html report_log.csv daily_log.csv
+          git add -A
           git diff --cached --quiet || git commit -m "Update GDXU report"
           git pull --rebase
           git push
