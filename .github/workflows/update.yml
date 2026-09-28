@@ -22,7 +22,15 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: python gdxu_site.py
+      - name: Build the page (retries if the Yahoo download fails)
+        run: |
+          for attempt in 1 2 3; do
+            rm -rf ~/.cache/py-yfinance
+            python gdxu_site.py && exit 0
+            echo "Attempt $attempt failed, retrying in 30 seconds..."
+            sleep 30
+          done
+          exit 1
       - name: Save the updated page
         run: |
           git config user.name "github-actions"
