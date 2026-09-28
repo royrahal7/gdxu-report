@@ -59,6 +59,7 @@ th{color:var(--muted);font-weight:500}
 <div id="tabDay" role="tabpanel" aria-labelledby="tbDay">
 <section class="first">
 <h2>Where GDXU could close on <span id="dayTarget"></span></h2>
+<div id="preNote"></div>
 <p class="muted" id="daySummary"></p>
 <svg id="dayRuler" viewBox="0 0 760 150" role="img" aria-label="Range of likely closing prices for the next session"></svg>
 <p id="liveNote"></p>
@@ -127,7 +128,7 @@ redemption of the note sit outside any model.</p>
 </section>
 </main>
 <script>
-const D = {"asof": "Friday 25 September 2026", "updated": "28 Sep 09:49 UTC", "weekEnd": "Friday 02 October", "price": 127.75, "vol": 0.17541061242869138, "closeQ": [97.34295189025043, 110.58631014523394, 127.06542394825635, 144.4634882737178, 162.08635781820084], "lowQ": [94.83784564003103, 106.26557169831646, 117.2075621400298], "zq": [-1.549706119898291, -0.8225210762968846, -0.030631704637222423, 0.7009357560060296, 1.3571244850666582], "events": ["NFP on Fri 02 Oct"], "history": {"dates": ["23 Mar", "24 Mar", "25 Mar", "26 Mar", "27 Mar", "30 Mar", "31 Mar", "01 Apr", "02 Apr", "06 Apr", "07 Apr", "08 Apr", "09 Apr", "10 Apr", "13 Apr", "14 Apr", "15 Apr", "16 Apr", "17 Apr", "20 Apr", "21 Apr", "22 Apr", "23 Apr", "24 Apr", "27 Apr", "28 Apr", "29 Apr", "30 Apr", "01 May", "04 May", "05 May", "06 May", "07 May", "08 May", "11 May", "12 May", "13 May", "14 May", "15 May", "18 May", "19 May", "20 May", "21 May", "22 May", "26 May", "27 May", "28 May", "29 May", "01 Jun", "02 Jun", "03 Jun", "04 Jun", "05 Jun", "08 Jun", "09 Jun", "10 Jun", "11 Jun", "12 Jun", "15 Jun", "16 Jun", "17 Jun", "18 Jun", "22 Jun", "23 Jun", "24 Jun", "25 Jun", "26 Jun", "29 Jun", "30 Jun", "01 Jul", "02 Jul", "06 Jul", "07 Jul", "08 Jul", "09 Jul", "10 Jul", "13 Jul", "14 Jul", "15 Jul", "16 Jul", "17 Jul", "20 Jul", "21 Jul", "22 Jul", "23 Jul", "24 Jul", "27 Jul", "28 Jul", "29 Jul", "30 Jul", "31 Jul", "03 Aug", "04 Aug", "05 Aug", "06 Aug", "07 Aug", "10 Aug", "11 Aug", "12 Aug", "13 Aug", "14 Aug", "17 Aug", "18 Aug", "19 Aug", "20 Aug", "21 Aug", "24 Aug", "25 Aug", "26 Aug", "27 Aug", "28 Aug", "31 Aug", "01 Sep", "02 Sep", "03 Sep", "04 Sep", "08 Sep", "09 Sep", "10 Sep", "11 Sep", "14 Sep", "15 Sep", "16 Sep", "17 Sep", "18 Sep", "21 Sep", "22 Sep", "23 Sep", "24 Sep", "25 Sep"], "values": [158.23, 158.76, 173.73, 147.95, 165.95, 165.94, 201.39, 228.82, 218.02, 212.12, 219.38, 242.61, 243.52, 250.66, 247.05, 262.94, 242.61, 239.97, 260.56, 250.23, 204.0, 213.67, 197.37, 208.87, 197.75, 172.14, 158.02, 169.79, 162.96, 154.3, 154.69, 191.09, 187.66, 203.99, 223.05, 220.97, 214.9, 199.65, 157.47, 155.0, 136.55, 148.48, 145.95, 141.26, 158.34, 142.14, 150.11, 163.35, 147.69, 153.2, 136.92, 142.26, 104.19, 103.63, 98.72, 84.16, 98.5, 107.21, 128.47, 137.59, 122.95, 114.28, 109.97, 94.22, 82.63, 86.64, 91.5, 86.5, 85.27, 84.75, 95.79, 97.23, 85.53, 77.63, 84.99, 84.01, 76.65, 81.57, 78.44, 69.89, 69.14, 67.54, 77.94, 86.03, 79.61, 80.03, 81.92, 77.13, 74.66, 83.74, 75.01, 81.08, 87.5, 107.14, 107.57, 130.43, 133.31, 131.72, 135.24, 123.34, 130.14, 138.29, 124.17, 158.63, 170.52, 185.17, 188.62, 199.03, 182.4, 189.93, 166.45, 161.17, 141.33, 156.0, 173.82, 161.91, 157.49, 162.05, 145.0, 149.3, 135.37, 134.27, 127.9, 142.61, 141.51, 136.27, 151.51, 131.07, 125.17, 127.75]}, "futureDates": ["28 Sep", "29 Sep", "30 Sep", "01 Oct", "02 Oct"], "gold": {"now": 4321.2001953125, "gvz": 0.22440000534057616, "alpha": -0.0013077152662555715, "beta": 1.6590296907227686, "r2": 0.6814458482821478, "q": [-0.052197339094449215, 0.004441727053776733, 0.055486275861369276], "decay": 0.02239056323847086, "drag": 0.007761405261804738, "days": 10}, "bigWeek": {"flag": false, "ret": -0.0237144706054071, "thr": 0.02022940362557879, "rank": 0.12535344015080113}, "dragYear": 0.17764854345454495, "log": [{"asof": "2026-09-25", "price": 127.75, "p10": 97.34, "p90": 162.09, "low10": 94.84, "big": false, "close5": null, "low5": null, "in_range": null, "low_held": null, "ret2w": null}], "day": {"target": "Monday 28 September", "q": [114.2898994445664, 120.90169988972045, 127.63226229362196, 134.9135194010497, 141.77702262860907], "vol": 0.042934722993648415, "events": [], "live": null, "lastDate": "Friday 25 September", "lastMove": 0.02061198265396147, "biggerThan": 0.19771369186801765, "log": [{"target": "Mon 28 Sep", "price": 127.75, "p10": 114.29, "p90": 141.78, "close": null, "in80": null, "in50": null}]}};
+const D = {"asof": "Friday 25 September 2026", "updated": "28 Sep 10:06 UTC", "weekEnd": "Friday 02 October", "price": 127.75, "vol": 0.17541056730501756, "closeQ": [97.34295988242978, 110.58631895489965, 127.06538730971519, 144.46351412599904, 162.08634676819005], "lowQ": [94.8378584650749, 106.26549961031864, 117.20762283301218], "zq": [-1.549706050490379, -0.822520833734066, -0.030633356340258315, 0.7009369565181865, 1.3571244455299227], "events": ["NFP on Fri 02 Oct"], "history": {"dates": ["23 Mar", "24 Mar", "25 Mar", "26 Mar", "27 Mar", "30 Mar", "31 Mar", "01 Apr", "02 Apr", "06 Apr", "07 Apr", "08 Apr", "09 Apr", "10 Apr", "13 Apr", "14 Apr", "15 Apr", "16 Apr", "17 Apr", "20 Apr", "21 Apr", "22 Apr", "23 Apr", "24 Apr", "27 Apr", "28 Apr", "29 Apr", "30 Apr", "01 May", "04 May", "05 May", "06 May", "07 May", "08 May", "11 May", "12 May", "13 May", "14 May", "15 May", "18 May", "19 May", "20 May", "21 May", "22 May", "26 May", "27 May", "28 May", "29 May", "01 Jun", "02 Jun", "03 Jun", "04 Jun", "05 Jun", "08 Jun", "09 Jun", "10 Jun", "11 Jun", "12 Jun", "15 Jun", "16 Jun", "17 Jun", "18 Jun", "22 Jun", "23 Jun", "24 Jun", "25 Jun", "26 Jun", "29 Jun", "30 Jun", "01 Jul", "02 Jul", "06 Jul", "07 Jul", "08 Jul", "09 Jul", "10 Jul", "13 Jul", "14 Jul", "15 Jul", "16 Jul", "17 Jul", "20 Jul", "21 Jul", "22 Jul", "23 Jul", "24 Jul", "27 Jul", "28 Jul", "29 Jul", "30 Jul", "31 Jul", "03 Aug", "04 Aug", "05 Aug", "06 Aug", "07 Aug", "10 Aug", "11 Aug", "12 Aug", "13 Aug", "14 Aug", "17 Aug", "18 Aug", "19 Aug", "20 Aug", "21 Aug", "24 Aug", "25 Aug", "26 Aug", "27 Aug", "28 Aug", "31 Aug", "01 Sep", "02 Sep", "03 Sep", "04 Sep", "08 Sep", "09 Sep", "10 Sep", "11 Sep", "14 Sep", "15 Sep", "16 Sep", "17 Sep", "18 Sep", "21 Sep", "22 Sep", "23 Sep", "24 Sep", "25 Sep"], "values": [158.23, 158.76, 173.73, 147.95, 165.95, 165.94, 201.39, 228.82, 218.02, 212.12, 219.38, 242.61, 243.52, 250.66, 247.05, 262.94, 242.61, 239.97, 260.56, 250.23, 204.0, 213.67, 197.37, 208.87, 197.75, 172.14, 158.02, 169.79, 162.96, 154.3, 154.69, 191.09, 187.66, 203.99, 223.05, 220.97, 214.9, 199.65, 157.47, 155.0, 136.55, 148.48, 145.95, 141.26, 158.34, 142.14, 150.11, 163.35, 147.69, 153.2, 136.92, 142.26, 104.19, 103.63, 98.72, 84.16, 98.5, 107.21, 128.47, 137.59, 122.95, 114.28, 109.97, 94.22, 82.63, 86.64, 91.5, 86.5, 85.27, 84.75, 95.79, 97.23, 85.53, 77.63, 84.99, 84.01, 76.65, 81.57, 78.44, 69.89, 69.14, 67.54, 77.94, 86.03, 79.61, 80.03, 81.92, 77.13, 74.66, 83.74, 75.01, 81.08, 87.5, 107.14, 107.57, 130.43, 133.31, 131.72, 135.24, 123.34, 130.14, 138.29, 124.17, 158.63, 170.52, 185.17, 188.62, 199.03, 182.4, 189.93, 166.45, 161.17, 141.33, 156.0, 173.82, 161.91, 157.49, 162.05, 145.0, 149.3, 135.37, 134.27, 127.9, 142.61, 141.51, 136.27, 151.51, 131.07, 125.17, 127.75]}, "futureDates": ["28 Sep", "29 Sep", "30 Sep", "01 Oct", "02 Oct"], "gold": {"now": 4321.2001953125, "gvz": 0.22440000534057616, "alpha": -0.0013077157620357597, "beta": 1.6590297000631795, "r2": 0.6814458536742041, "q": [-0.05219733176057482, 0.004441727584319652, 0.05548629059649469], "decay": 0.02239056323847086, "drag": 0.007761400406723664, "days": 10}, "bigWeek": {"flag": false, "ret": -0.0237144706054071, "thr": 0.02022940362557879, "rank": 0.12535344015080113}, "dragYear": 0.17764844284144743, "log": [{"asof": "2026-09-25", "price": 127.75, "p10": 97.34, "p90": 162.09, "low10": 94.84, "big": false, "close5": null, "low5": null, "in_range": null, "low_held": null, "ret2w": null}], "day": {"target": "Monday 28 September", "q": [100.48849413881811, 105.22804984457599, 109.06856880768036, 113.9442841793776, 118.55669635253372], "vol": 0.04293488829700135, "events": [], "live": null, "pre": {"goldMove": -0.031988142934384456, "goldNow": 4188.2001953125, "goldTime": "Mon 05:00", "open": 109.70819687204104, "openLo": 106.45044892507826, "openHi": 112.12431187757079, "beta": 4.657504674086809}, "lastDate": "Friday 25 September", "lastMove": 0.02061198265396147, "biggerThan": 0.19771369186801765, "log": [{"target": "Mon 28 Sep", "price": 127.75, "p10": 100.49, "p90": 118.56, "close": null, "in80": null, "in50": null}]}};
 const $ = id => document.getElementById(id);
 const usd = v => "$" + v.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
 const pc = v => (v >= 0 ? "+" : "") + (v * 100).toFixed(1) + "%";
@@ -152,7 +153,8 @@ $("price").textContent = usd(L ? L.price : D.price);
 $("priceNote").textContent = L
   ? "Live at " + L.time + " New York time (Yahoo prices can lag about 15 minutes), " + pc(L.change) +
     " since the last close of " + usd(D.price) + "."
-  : "Last close, " + D.asof + ".";
+  : "Last close, " + D.asof + "." + (D.day.pre ? " Gold has moved " + pc(D.day.pre.goldMove) +
+    " since then; see the likely open below." : "");
 function showTab(which) {
   const day = which === "day";
   $("tabDay").hidden = !day; $("tabWeek").hidden = day;
@@ -171,7 +173,8 @@ if (D.bigWeek.flag) {
 }
 
 // ---- rulers ----
-function drawRuler(s, q, lowQ, live) {
+function drawRuler(s, q, lowQ, mark) {
+  const live = mark ? mark.v : null;
   const pts = [q[0], q[4], D.price].concat(lowQ ? [lowQ[0]] : []).concat(live ? [live] : []);
   const lo = Math.min(...pts) * 0.97, hi = Math.max(...pts) * 1.03;
   const X = v => 20 + (v - lo) / (hi - lo) * 720;
@@ -192,7 +195,7 @@ function drawRuler(s, q, lowQ, live) {
   if (live) {
     el(s, "line", {x1: X(live), x2: X(live), y1: 40, y2: 110, stroke: "var(--up)",
       "stroke-width": 3});
-    el(s, "text", {x: X(live), y: 32, "text-anchor": "middle", class: "lbl", fill: "var(--up)"}, "Live " + usd(live));
+    el(s, "text", {x: X(live), y: 32, "text-anchor": "middle", class: "lbl", fill: "var(--up)"}, mark.label + " " + usd(live));
   }
   el(s, "line", {x1: X(D.price), x2: X(D.price), y1: 44, y2: 110, stroke: "var(--ink)", "stroke-width": 2});
   el(s, "text", {x: X(D.price), y: 16, "text-anchor": "middle", class: "lbl"}, "Last close " + usd(D.price));
@@ -200,15 +203,25 @@ function drawRuler(s, q, lowQ, live) {
   el(s, "text", {x: X(q[4]), y: 148, "text-anchor": "end", class: "lbl"}, usd(q[4]));
 }
 drawRuler($("ruler"), D.closeQ, D.lowQ, null);
-drawRuler($("dayRuler"), D.day.q, null, L ? L.price : null);
+const P = D.day.pre;
+drawRuler($("dayRuler"), D.day.q, null,
+  L ? {v: L.price, label: "Live"} : (P ? {v: P.open, label: "Likely open"} : null));
 
 // ---- today tab ----
 (function () {
   const d = D.day;
   $("dayTarget").textContent = d.target;
   const ev = d.events.length ? " Scheduled that day: " + d.events.join(", ") + "." : "";
-  $("daySummary").textContent = "Expected size of a typical one-day move: about " + (d.vol * 100).toFixed(1) +
-    "% either way. The dark band holds half of likely closes, the light band eight in ten." + ev;
+  $("daySummary").textContent = (P ? "Range re-centred on gold's move since GDXU's last close. " :
+    "Expected size of a typical one-day move: about " + (d.vol * 100).toFixed(1) + "% either way. ") +
+    "The dark band holds half of likely closes, the light band eight in ten." + ev;
+  if (P) {
+    $("preNote").innerHTML = '<div class="flag">Before the open: gold is <b>' + pc(P.goldMove) +
+      "</b> since GDXU's last close (" + usd(P.goldNow) + ", " + P.goldTime + " New York time). " +
+      "GDXU is likely to open around <b>" + usd(P.open) + "</b>, with eight in ten opens between " +
+      usd(P.openLo) + " and " + usd(P.openHi) + ". This is priced in at the bell and says nothing " +
+      "about the rest of the day.</div>";
+  }
   if (L) {
     $("liveNote").innerHTML = L.inside
       ? "So far today GDXU is trading <b>inside</b> the eight-in-ten range."
