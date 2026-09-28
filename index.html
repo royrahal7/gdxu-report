@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GDXU weekly risk</title>
+<title>GDXU risk tracker</title>
 <style>
 :root{--bg:#EDEFEF;--ink:#1D2733;--muted:#5E6B78;--gold:#A97C14;--gold2:rgba(169,124,20,.16);
 --gold3:rgba(169,124,20,.34);--down:#A83A32;--up:#2E6E6A;--rule:#C9CFD4;--field:#fff}
@@ -16,7 +16,14 @@ h1{font-size:1.1rem;margin:0;color:var(--muted);font-weight:500}
 .big{font-size:3.4rem;line-height:1.05;margin:6px 0 4px}
 h2{font-size:1.45rem;margin:0 0 6px}
 section{padding:36px 0;border-top:1px solid var(--rule)}
-header{padding-bottom:28px}
+header{padding-bottom:0}
+.tabs{display:flex;gap:4px;margin-top:22px;border-bottom:1px solid var(--rule)}
+.tabs button{font:inherit;background:none;border:0;border-bottom:3px solid transparent;
+padding:10px 16px;color:var(--muted);cursor:pointer;margin-bottom:-1px}
+.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--gold);font-weight:600}
+.tabs button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+section.first{border-top:0}
+[hidden]{display:none!important}
 p{margin:.4em 0;max-width:68ch}
 .muted{color:var(--muted)}
 .flag{display:inline-block;margin-top:10px;padding:6px 12px;border-left:3px solid var(--gold);
@@ -40,14 +47,40 @@ th:first-child,td:first-child{text-align:left}
 th{color:var(--muted);font-weight:500}
 </style></head><body><main>
 <header>
-<h1>GDXU weekly risk, data as of <span id="asof"></span></h1>
+<h1>GDXU risk tracker, updated <span id="updated"></span></h1>
 <div class="big" id="price"></div>
-<p id="summary"></p>
-<div id="flag"></div>
+<p id="priceNote"></p>
+<div class="tabs" role="tablist">
+<button role="tab" id="tbDay" aria-selected="true" aria-controls="tabDay">Today</button>
+<button role="tab" id="tbWeek" aria-selected="false" aria-controls="tabWeek">This week</button>
+</div>
 </header>
 
+<div id="tabDay" role="tabpanel" aria-labelledby="tbDay">
+<section class="first">
+<h2>Where GDXU could close on <span id="dayTarget"></span></h2>
+<p class="muted" id="daySummary"></p>
+<svg id="dayRuler" viewBox="0 0 760 150" role="img" aria-label="Range of likely closing prices for the next session"></svg>
+<p id="liveNote"></p>
+</section>
+
 <section>
+<h2>The last session in context</h2>
+<p id="lastMove"></p>
+</section>
+
+<section>
+<h2>Daily track record</h2>
+<p class="muted" id="dayLogSummary"></p>
+<div class="tbl"><table id="dayLogTable"></table></div>
+</section>
+</div>
+
+<div id="tabWeek" role="tabpanel" aria-labelledby="tbWeek" hidden>
+<section class="first">
 <h2>Where GDXU could close by <span id="weekEnd"></span></h2>
+<p id="summary"></p>
+<div id="flag"></div>
 <p class="muted">The dark band holds half of likely outcomes, the light band eight in ten.
 The red line is how low it could dip during a rough week, one week in ten.</p>
 <svg id="ruler" viewBox="0 0 760 150" role="img" aria-label="Range of likely closing prices"></svg>
@@ -82,17 +115,19 @@ The red line is how low it could dip during a rough week, one week in ten.</p>
 <div class="tbl"><table id="logTable"></table></div>
 </section>
 
+</div>
+
 <section>
 <h2>What this can and cannot tell you</h2>
-<p>It forecasts how far GDXU is likely to move, not which way. Three direction models and
+<p>It forecasts how far GDXU is likely to move, today and this week, not which way. Three direction models and
 eleven gold price-level signals were tested on up to twenty years of data, and none beat chance.</p>
 <p id="dragNote"></p>
-<p>The range will be wrong about one week in five, and rare events such as an early
+<p>Each range will be wrong about one time in five, and rare events such as an early
 redemption of the note sit outside any model.</p>
 </section>
 </main>
 <script>
-const D = {"asof": "Friday 25 September 2026 (page updated 28 Sep 09:38 UTC)", "weekEnd": "Friday 02 October", "price": 127.75, "vol": 0.17541051232539068, "closeQ": [97.34298250590058, 110.58632819705808, 127.06543420736497, 144.46350858449097, 162.08636105497192], "lowQ": [94.83787326474497, 106.26558983304032, 117.20763364404567], "zq": [-1.5497052112724565, -0.822520615091153, -0.030631261833359576, 0.7009369575331154, 1.3571253733946231], "events": ["NFP on Fri 02 Oct"], "history": {"dates": ["23 Mar", "24 Mar", "25 Mar", "26 Mar", "27 Mar", "30 Mar", "31 Mar", "01 Apr", "02 Apr", "06 Apr", "07 Apr", "08 Apr", "09 Apr", "10 Apr", "13 Apr", "14 Apr", "15 Apr", "16 Apr", "17 Apr", "20 Apr", "21 Apr", "22 Apr", "23 Apr", "24 Apr", "27 Apr", "28 Apr", "29 Apr", "30 Apr", "01 May", "04 May", "05 May", "06 May", "07 May", "08 May", "11 May", "12 May", "13 May", "14 May", "15 May", "18 May", "19 May", "20 May", "21 May", "22 May", "26 May", "27 May", "28 May", "29 May", "01 Jun", "02 Jun", "03 Jun", "04 Jun", "05 Jun", "08 Jun", "09 Jun", "10 Jun", "11 Jun", "12 Jun", "15 Jun", "16 Jun", "17 Jun", "18 Jun", "22 Jun", "23 Jun", "24 Jun", "25 Jun", "26 Jun", "29 Jun", "30 Jun", "01 Jul", "02 Jul", "06 Jul", "07 Jul", "08 Jul", "09 Jul", "10 Jul", "13 Jul", "14 Jul", "15 Jul", "16 Jul", "17 Jul", "20 Jul", "21 Jul", "22 Jul", "23 Jul", "24 Jul", "27 Jul", "28 Jul", "29 Jul", "30 Jul", "31 Jul", "03 Aug", "04 Aug", "05 Aug", "06 Aug", "07 Aug", "10 Aug", "11 Aug", "12 Aug", "13 Aug", "14 Aug", "17 Aug", "18 Aug", "19 Aug", "20 Aug", "21 Aug", "24 Aug", "25 Aug", "26 Aug", "27 Aug", "28 Aug", "31 Aug", "01 Sep", "02 Sep", "03 Sep", "04 Sep", "08 Sep", "09 Sep", "10 Sep", "11 Sep", "14 Sep", "15 Sep", "16 Sep", "17 Sep", "18 Sep", "21 Sep", "22 Sep", "23 Sep", "24 Sep", "25 Sep"], "values": [158.23, 158.76, 173.73, 147.95, 165.95, 165.94, 201.39, 228.82, 218.02, 212.12, 219.38, 242.61, 243.52, 250.66, 247.05, 262.94, 242.61, 239.97, 260.56, 250.23, 204.0, 213.67, 197.37, 208.87, 197.75, 172.14, 158.02, 169.79, 162.96, 154.3, 154.69, 191.09, 187.66, 203.99, 223.05, 220.97, 214.9, 199.65, 157.47, 155.0, 136.55, 148.48, 145.95, 141.26, 158.34, 142.14, 150.11, 163.35, 147.69, 153.2, 136.92, 142.26, 104.19, 103.63, 98.72, 84.16, 98.5, 107.21, 128.47, 137.59, 122.95, 114.28, 109.97, 94.22, 82.63, 86.64, 91.5, 86.5, 85.27, 84.75, 95.79, 97.23, 85.53, 77.63, 84.99, 84.01, 76.65, 81.57, 78.44, 69.89, 69.14, 67.54, 77.94, 86.03, 79.61, 80.03, 81.92, 77.13, 74.66, 83.74, 75.01, 81.08, 87.5, 107.14, 107.57, 130.43, 133.31, 131.72, 135.24, 123.34, 130.14, 138.29, 124.17, 158.63, 170.52, 185.17, 188.62, 199.03, 182.4, 189.93, 166.45, 161.17, 141.33, 156.0, 173.82, 161.91, 157.49, 162.05, 145.0, 149.3, 135.37, 134.27, 127.9, 142.61, 141.51, 136.27, 151.51, 131.07, 125.17, 127.75]}, "futureDates": ["28 Sep", "29 Sep", "30 Sep", "01 Oct", "02 Oct"], "gold": {"now": 4321.2001953125, "gvz": 0.22440000534057616, "alpha": -0.0013077171130306336, "beta": 1.6590298631686984, "r2": 0.6814459143413532, "q": [-0.05219733511195077, 0.004441729001635433, 0.055486273918835975], "decay": 0.02239056323847086, "drag": 0.007761403244302712, "days": 10}, "bigWeek": {"flag": false, "ret": -0.0237144706054071, "thr": 0.02022940362557879, "rank": 0.12535344015080113}, "dragYear": 0.17764850164533152, "log": [{"asof": "2026-09-25", "price": 127.75, "p10": 97.34, "p90": 162.09, "low10": 94.84, "big": false, "close5": null, "low5": null, "in_range": null, "low_held": null, "ret2w": null}]};
+const D = {"asof": "Friday 25 September 2026", "updated": "28 Sep 09:49 UTC", "weekEnd": "Friday 02 October", "price": 127.75, "vol": 0.17541061242869138, "closeQ": [97.34295189025043, 110.58631014523394, 127.06542394825635, 144.4634882737178, 162.08635781820084], "lowQ": [94.83784564003103, 106.26557169831646, 117.2075621400298], "zq": [-1.549706119898291, -0.8225210762968846, -0.030631704637222423, 0.7009357560060296, 1.3571244850666582], "events": ["NFP on Fri 02 Oct"], "history": {"dates": ["23 Mar", "24 Mar", "25 Mar", "26 Mar", "27 Mar", "30 Mar", "31 Mar", "01 Apr", "02 Apr", "06 Apr", "07 Apr", "08 Apr", "09 Apr", "10 Apr", "13 Apr", "14 Apr", "15 Apr", "16 Apr", "17 Apr", "20 Apr", "21 Apr", "22 Apr", "23 Apr", "24 Apr", "27 Apr", "28 Apr", "29 Apr", "30 Apr", "01 May", "04 May", "05 May", "06 May", "07 May", "08 May", "11 May", "12 May", "13 May", "14 May", "15 May", "18 May", "19 May", "20 May", "21 May", "22 May", "26 May", "27 May", "28 May", "29 May", "01 Jun", "02 Jun", "03 Jun", "04 Jun", "05 Jun", "08 Jun", "09 Jun", "10 Jun", "11 Jun", "12 Jun", "15 Jun", "16 Jun", "17 Jun", "18 Jun", "22 Jun", "23 Jun", "24 Jun", "25 Jun", "26 Jun", "29 Jun", "30 Jun", "01 Jul", "02 Jul", "06 Jul", "07 Jul", "08 Jul", "09 Jul", "10 Jul", "13 Jul", "14 Jul", "15 Jul", "16 Jul", "17 Jul", "20 Jul", "21 Jul", "22 Jul", "23 Jul", "24 Jul", "27 Jul", "28 Jul", "29 Jul", "30 Jul", "31 Jul", "03 Aug", "04 Aug", "05 Aug", "06 Aug", "07 Aug", "10 Aug", "11 Aug", "12 Aug", "13 Aug", "14 Aug", "17 Aug", "18 Aug", "19 Aug", "20 Aug", "21 Aug", "24 Aug", "25 Aug", "26 Aug", "27 Aug", "28 Aug", "31 Aug", "01 Sep", "02 Sep", "03 Sep", "04 Sep", "08 Sep", "09 Sep", "10 Sep", "11 Sep", "14 Sep", "15 Sep", "16 Sep", "17 Sep", "18 Sep", "21 Sep", "22 Sep", "23 Sep", "24 Sep", "25 Sep"], "values": [158.23, 158.76, 173.73, 147.95, 165.95, 165.94, 201.39, 228.82, 218.02, 212.12, 219.38, 242.61, 243.52, 250.66, 247.05, 262.94, 242.61, 239.97, 260.56, 250.23, 204.0, 213.67, 197.37, 208.87, 197.75, 172.14, 158.02, 169.79, 162.96, 154.3, 154.69, 191.09, 187.66, 203.99, 223.05, 220.97, 214.9, 199.65, 157.47, 155.0, 136.55, 148.48, 145.95, 141.26, 158.34, 142.14, 150.11, 163.35, 147.69, 153.2, 136.92, 142.26, 104.19, 103.63, 98.72, 84.16, 98.5, 107.21, 128.47, 137.59, 122.95, 114.28, 109.97, 94.22, 82.63, 86.64, 91.5, 86.5, 85.27, 84.75, 95.79, 97.23, 85.53, 77.63, 84.99, 84.01, 76.65, 81.57, 78.44, 69.89, 69.14, 67.54, 77.94, 86.03, 79.61, 80.03, 81.92, 77.13, 74.66, 83.74, 75.01, 81.08, 87.5, 107.14, 107.57, 130.43, 133.31, 131.72, 135.24, 123.34, 130.14, 138.29, 124.17, 158.63, 170.52, 185.17, 188.62, 199.03, 182.4, 189.93, 166.45, 161.17, 141.33, 156.0, 173.82, 161.91, 157.49, 162.05, 145.0, 149.3, 135.37, 134.27, 127.9, 142.61, 141.51, 136.27, 151.51, 131.07, 125.17, 127.75]}, "futureDates": ["28 Sep", "29 Sep", "30 Sep", "01 Oct", "02 Oct"], "gold": {"now": 4321.2001953125, "gvz": 0.22440000534057616, "alpha": -0.0013077152662555715, "beta": 1.6590296907227686, "r2": 0.6814458482821478, "q": [-0.052197339094449215, 0.004441727053776733, 0.055486275861369276], "decay": 0.02239056323847086, "drag": 0.007761405261804738, "days": 10}, "bigWeek": {"flag": false, "ret": -0.0237144706054071, "thr": 0.02022940362557879, "rank": 0.12535344015080113}, "dragYear": 0.17764854345454495, "log": [{"asof": "2026-09-25", "price": 127.75, "p10": 97.34, "p90": 162.09, "low10": 94.84, "big": false, "close5": null, "low5": null, "in_range": null, "low_held": null, "ret2w": null}], "day": {"target": "Monday 28 September", "q": [114.2898994445664, 120.90169988972045, 127.63226229362196, 134.9135194010497, 141.77702262860907], "vol": 0.042934722993648415, "events": [], "live": null, "lastDate": "Friday 25 September", "lastMove": 0.02061198265396147, "biggerThan": 0.19771369186801765, "log": [{"target": "Mon 28 Sep", "price": 127.75, "p10": 114.29, "p90": 141.78, "close": null, "in80": null, "in50": null}]}};
 const $ = id => document.getElementById(id);
 const usd = v => "$" + v.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
 const pc = v => (v >= 0 ? "+" : "") + (v * 100).toFixed(1) + "%";
@@ -111,11 +146,23 @@ function erf(x) {
 }
 const ncdf = x => 0.5 * (1 + erf(x / Math.SQRT2));
 
-$("asof").textContent = D.asof;
-$("price").textContent = usd(D.price);
+$("updated").textContent = D.updated;
+const L = D.day.live;
+$("price").textContent = usd(L ? L.price : D.price);
+$("priceNote").textContent = L
+  ? "Live at " + L.time + " New York time (Yahoo prices can lag about 15 minutes), " + pc(L.change) +
+    " since the last close of " + usd(D.price) + "."
+  : "Last close, " + D.asof + ".";
+function showTab(which) {
+  const day = which === "day";
+  $("tabDay").hidden = !day; $("tabWeek").hidden = day;
+  $("tbDay").setAttribute("aria-selected", day); $("tbWeek").setAttribute("aria-selected", !day);
+}
+$("tbDay").addEventListener("click", () => showTab("day"));
+$("tbWeek").addEventListener("click", () => showTab("week"));
 $("weekEnd").textContent = D.weekEnd;
 const ev = D.events.length ? "Scheduled this week: " + D.events.join(", ") + "." : "No major scheduled releases this week.";
-$("summary").textContent = "Expected size of a typical 5-day move: about " + (D.vol * 100).toFixed(0) +
+$("summary").textContent = "From the last close of " + usd(D.price) + ". Expected size of a typical 5-day move: about " + (D.vol * 100).toFixed(0) +
   "% either way. Direction is treated as a coin flip. " + ev;
 if (D.bigWeek.flag) {
   $("flag").innerHTML = '<div class="flag">Gold just had one of its strongest weeks (' + pc(D.bigWeek.ret) +
@@ -123,27 +170,69 @@ if (D.bigWeek.flag) {
     'to give back ground after such weeks. This is an untested pattern being tracked below, not a signal.</div>';
 }
 
-// ---- ruler ----
-(function () {
-  const s = $("ruler"), q = D.closeQ, lowQ = D.lowQ;
-  const lo = Math.min(lowQ[0], q[0]) * 0.96, hi = q[4] * 1.04;
+// ---- rulers ----
+function drawRuler(s, q, lowQ, live) {
+  const pts = [q[0], q[4], D.price].concat(lowQ ? [lowQ[0]] : []).concat(live ? [live] : []);
+  const lo = Math.min(...pts) * 0.97, hi = Math.max(...pts) * 1.03;
   const X = v => 20 + (v - lo) / (hi - lo) * 720;
-  const step = [1, 2, 5, 10, 20, 25, 50].find(st => (hi - lo) / st <= 10) || 100;
+  const step = [0.5, 1, 2, 5, 10, 20, 25, 50].find(st => (hi - lo) / st <= 10) || 100;
   el(s, "line", {x1: 20, x2: 740, y1: 110, y2: 110, stroke: "var(--rule)"});
   for (let t = Math.ceil(lo / step) * step; t <= hi; t += step) {
     el(s, "line", {x1: X(t), x2: X(t), y1: 106, y2: 114, stroke: "var(--muted)"});
-    el(s, "text", {x: X(t), y: 132, "text-anchor": "middle"}, "$" + t);
+    el(s, "text", {x: X(t), y: 132, "text-anchor": "middle"}, "$" + (+t.toFixed(1)));
   }
   el(s, "rect", {x: X(q[0]), y: 52, width: X(q[4]) - X(q[0]), height: 46, fill: "var(--gold2)"});
   el(s, "rect", {x: X(q[1]), y: 52, width: X(q[3]) - X(q[1]), height: 46, fill: "var(--gold3)"});
   el(s, "line", {x1: X(q[2]), x2: X(q[2]), y1: 48, y2: 102, stroke: "var(--gold)", "stroke-width": 2});
-  el(s, "line", {x1: X(lowQ[0]), x2: X(lowQ[0]), y1: 40, y2: 110, stroke: "var(--down)",
-    "stroke-width": 2, "stroke-dasharray": "4 3"});
-  el(s, "text", {x: X(lowQ[0]), y: 32, "text-anchor": "middle", class: "lbl", fill: "var(--down)"}, usd(lowQ[0]));
+  if (lowQ) {
+    el(s, "line", {x1: X(lowQ[0]), x2: X(lowQ[0]), y1: 40, y2: 110, stroke: "var(--down)",
+      "stroke-width": 2, "stroke-dasharray": "4 3"});
+    el(s, "text", {x: X(lowQ[0]), y: 32, "text-anchor": "middle", class: "lbl", fill: "var(--down)"}, usd(lowQ[0]));
+  }
+  if (live) {
+    el(s, "line", {x1: X(live), x2: X(live), y1: 40, y2: 110, stroke: "var(--up)",
+      "stroke-width": 3});
+    el(s, "text", {x: X(live), y: 32, "text-anchor": "middle", class: "lbl", fill: "var(--up)"}, "Live " + usd(live));
+  }
   el(s, "line", {x1: X(D.price), x2: X(D.price), y1: 44, y2: 110, stroke: "var(--ink)", "stroke-width": 2});
-  el(s, "text", {x: X(D.price), y: 16, "text-anchor": "middle", class: "lbl"}, "Now " + usd(D.price));
-  [[q[0], "start"], [q[4], "end"]].forEach(([v, a]) =>
-    el(s, "text", {x: X(v), y: 148, "text-anchor": a === "start" ? "start" : "end", class: "lbl"}, usd(v)));
+  el(s, "text", {x: X(D.price), y: 16, "text-anchor": "middle", class: "lbl"}, "Last close " + usd(D.price));
+  el(s, "text", {x: X(q[0]), y: 148, "text-anchor": "start", class: "lbl"}, usd(q[0]));
+  el(s, "text", {x: X(q[4]), y: 148, "text-anchor": "end", class: "lbl"}, usd(q[4]));
+}
+drawRuler($("ruler"), D.closeQ, D.lowQ, null);
+drawRuler($("dayRuler"), D.day.q, null, L ? L.price : null);
+
+// ---- today tab ----
+(function () {
+  const d = D.day;
+  $("dayTarget").textContent = d.target;
+  const ev = d.events.length ? " Scheduled that day: " + d.events.join(", ") + "." : "";
+  $("daySummary").textContent = "Expected size of a typical one-day move: about " + (d.vol * 100).toFixed(1) +
+    "% either way. The dark band holds half of likely closes, the light band eight in ten." + ev;
+  if (L) {
+    $("liveNote").innerHTML = L.inside
+      ? "So far today GDXU is trading <b>inside</b> the eight-in-ten range."
+      : "So far today GDXU is trading <b class='dn'>outside</b> the eight-in-ten range, an unusually large move.";
+  }
+  const pctile = (d.biggerThan * 100).toFixed(0);
+  const oneIn = d.biggerThan < 0.999 ? Math.round(1 / (1 - d.biggerThan)) : 1000;
+  $("lastMove").innerHTML = "On " + d.lastDate + " GDXU moved <b class='" + (d.lastMove >= 0 ? "upc" : "dn") + "'>" +
+    pc(d.lastMove) + "</b>. Relative to what the model expected for that day, the move was bigger than " +
+    pctile + "% of days, " + (d.biggerThan >= 0.5 ? "roughly a one-in-" + oneIn + "-day move." : "an ordinary day for GDXU.");
+  const done = d.log.filter(r => r.close !== null);
+  if (!done.length) {
+    $("dayLogSummary").textContent = "No daily forecasts scored yet. Each is scored after the day it covers closes.";
+  } else {
+    const in80 = done.filter(r => r.in80).length, in50 = done.filter(r => r.in50).length;
+    $("dayLogSummary").textContent = "Scored days: " + done.length + ". Closed inside the eight-in-ten range: " + in80 +
+      " (" + (in80 / done.length * 100).toFixed(0) + "%, target 80%). Inside the half-of-outcomes band: " + in50 +
+      " (" + (in50 / done.length * 100).toFixed(0) + "%, target 50%).";
+  }
+  const head = "<tr><th>Day</th><th>Prior close</th><th>8-in-10 range</th><th>Actual close</th></tr>";
+  const rows = d.log.slice().reverse().slice(0, 20).map(r => "<tr><td>" + r.target + "</td><td>" + usd(r.price) +
+    "</td><td>" + usd(r.p10) + " to " + usd(r.p90) + "</td><td>" +
+    (r.close === null ? "pending" : "<span class='" + (r.in80 ? "upc" : "dn") + "'>" + usd(r.close) + "</span>") + "</td></tr>");
+  $("dayLogTable").innerHTML = head + rows.join("");
 })();
 
 // ---- chart ----
