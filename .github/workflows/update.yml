@@ -2,8 +2,13 @@ name: Update GDXU report
 
 on:
   schedule:
-    - cron: "30 22 * * 1-5"   # 22:30 UTC, Monday to Friday, after the US close
-  workflow_dispatch:           # adds a "Run workflow" button for manual runs
+    - cron: "40 13-20 * * 1-5"   # hourly while the US market is open (UTC)
+    - cron: "30 22 * * 1-5"      # after the close
+  workflow_dispatch:
+
+concurrency:
+  group: gdxu-update
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -17,11 +22,12 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: python build_report.py
+      - run: python gdxu_site.py
       - name: Save the updated page
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add index.html report_log.csv
+          git add index.html report_log.csv daily_log.csv
           git diff --cached --quiet || git commit -m "Update GDXU report"
+          git pull --rebase
           git push
