@@ -2,6 +2,7 @@ name: Update GDXU report
 
 on:
   schedule:
+    - cron: "45 12 * * 1-5"      # pre-open, about 45 minutes before the US open
     - cron: "40 13-20 * * 1-5"   # hourly while the US market is open (UTC)
     - cron: "30 22 * * 1-5"      # after the close
   workflow_dispatch:
@@ -26,7 +27,7 @@ jobs:
         run: |
           for attempt in 1 2 3; do
             rm -rf ~/.cache/py-yfinance
-            python gdxu_site.py && exit 0
+            python gdxu_app.py && exit 0
             echo "Attempt $attempt failed, retrying in 30 seconds..."
             sleep 30
           done
