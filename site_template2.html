@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GDXU Pro</title>
+<style>
+:root{--bg:#EDEFEF;--card:#F6F7F7;--ink:#1D2733;--muted:#5E6B78;--gold:#A97C14;--gold2:rgba(169,124,20,.14);
+--gold3:rgba(169,124,20,.30);--down:#A83A32;--up:#2E6E6A;--rule:#D3D8DC;--field:#fff;--warn:rgba(168,58,50,.10)}
+@media (prefers-color-scheme:dark){:root{--bg:#12171D;--card:#171D24;--ink:#E3E7EB;--muted:#9AA5B1;--gold:#D7A93B;
+--gold2:rgba(215,169,59,.12);--gold3:rgba(215,169,59,.28);--down:#E07A6E;--up:#6FB3AD;--rule:#2A333D;
+--field:#1A2129;--warn:rgba(224,122,110,.12)}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,"Segoe UI",sans-serif;
+font-variant-numeric:tabular-nums}
+main{max-width:1100px;margin:0 auto;padding:0 18px 70px}
+h1,h2,.big{font-family:Charter,"Sitka Text",Cambria,Georgia,serif;font-weight:600;margin:0}
+h2{font-size:1.15rem;margin:0 0 8px}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 0;border-bottom:1px solid var(--rule)}
+.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px}
+.brand{font-family:Charter,"Sitka Text",Cambria,Georgia,serif;font-weight:600;color:var(--muted)}
+.big{font-size:2.3rem;line-height:1}
+.pill{font-size:.78rem;padding:2px 8px;border-radius:10px;border:1px solid var(--rule);color:var(--muted)}
+.pill.live{border-color:var(--up);color:var(--up)}
+nav{display:flex;gap:2px;margin-top:10px;overflow-x:auto}
+nav button{font:inherit;background:none;border:0;border-bottom:3px solid transparent;padding:8px 13px;
+color:var(--muted);cursor:pointer;white-space:nowrap}
+nav button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--gold);font-weight:600}
+nav button:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+section{margin-top:22px}
+.muted{color:var(--muted)} .dn{color:var(--down)} .upc{color:var(--up)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:12px 14px}
+.sig .row1{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sig .name{font-size:.85rem;color:var(--muted)}
+.sig .val{font-family:Charter,"Sitka Text",Cambria,Georgia,serif;font-size:1.35rem;font-weight:600;margin:2px 0}
+.sig .det{font-size:.83rem;color:var(--muted)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:var(--muted)}
+.lv-ok .dot{background:var(--up)} .lv-watch .dot{background:var(--gold)} .lv-alert .dot{background:var(--down)}
+.lv-alert{border-color:var(--down)}
+.ev{font-size:.66rem;letter-spacing:.06em;padding:1px 6px;border-radius:3px;border:1px solid var(--rule);color:var(--muted)}
+.ev.tested{border-color:var(--up);color:var(--up)} .ev.experiment{border-color:var(--gold);color:var(--gold)}
+.alert{background:var(--warn);border-left:3px solid var(--down);padding:7px 12px;margin:10px 0 0}
+.flag{background:var(--gold2);border-left:3px solid var(--gold);padding:7px 12px;margin:8px 0}
+svg{width:100%;height:auto;display:block;overflow:visible;touch-action:pan-y}
+svg text{fill:var(--muted);font-size:11px;font-family:system-ui,sans-serif}
+svg .lbl{fill:var(--ink);font-size:12px;font-weight:600}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+.tbl{overflow-x:auto}
+th,td{text-align:right;padding:6px 7px;border-bottom:1px solid var(--rule);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:500}
+label{display:block;font-size:.8rem;color:var(--muted);margin-top:6px}
+input,select{font:inherit;padding:6px 8px;width:100%;background:var(--field);color:var(--ink);
+border:1px solid var(--rule);border-radius:4px}
+input[type=range]{padding:0;accent-color:var(--gold)}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;align-items:end}
+button.act{font:inherit;padding:7px 14px;background:var(--ink);color:var(--bg);border:0;border-radius:4px;cursor:pointer}
+button.sm{font:inherit;font-size:.8rem;padding:3px 8px;background:none;color:var(--ink);border:1px solid var(--rule);
+border-radius:4px;cursor:pointer}
+.bar{display:flex;height:22px;border-radius:3px;overflow:hidden;margin:8px 0;background:var(--gold2)}
+.bar span{display:block;height:100%}
+.legend span{display:inline-block;margin-right:14px;font-size:.83rem}
+.legend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:middle}
+.toggles{display:flex;flex-wrap:wrap;gap:6px 14px;margin:4px 0 8px;font-size:.83rem}
+.toggles label{display:flex;align-items:center;gap:5px;margin:0;color:var(--ink);cursor:pointer}
+.toggles input{width:auto}
+.sw{display:inline-block;width:14px;height:3px;border-radius:2px}
+[hidden]{display:none!important}
+</style></head><body><main>
+<header>
+  <div class="top">
+    <span class="brand">GDXU Pro</span>
+    <span class="big" id="hPrice"></span>
+    <span id="hChange"></span>
+    <span class="pill" id="hStatus"></span>
+    <span class="muted" style="font-size:.82rem">updated <span id="hUpd"></span></span>
+  </div>
+  <nav role="tablist" id="tabs"></nav>
+</header>
+<div id="alertsTop"></div>
+
+<div data-tab="live">
+  <section><div class="grid" id="board"></div></section>
+  <section class="card"><h2>GDXU today <span class="muted" style="font-size:.85rem;font-weight:400">5-minute candles, New York time</span></h2>
+    <div id="preBox"></div><div id="chX"></div><p class="muted" id="chXNote" style="font-size:.83rem"></p></section>
+  <section class="card"><h2>Gold futures <span class="muted" style="font-size:.85rem;font-weight:400">5-minute candles</span></h2>
+    <div class="toggles" id="lvlToggles"></div>
+    <div id="chG"></div><p class="muted" id="chGNote" style="font-size:.83rem"></p></section>
+  <section class="card"><h2>Gold, six months <span class="muted" style="font-size:.85rem;font-weight:400">daily candles with the same levels</span></h2>
+    <div id="chGD"></div></section>
+  <section class="card"><h2>Gold levels <span class="ev">CONTEXT</span></h2>
+    <p class="muted" style="font-size:.83rem">Levels are where traders watch, not where gold must turn: in 20 years of testing, levels did not
+    predict gold's next move better than arbitrary prices. Each type is now scored live against fake levels nearby (Track record tab).
+    GDXU equivalents assume gold gets there from here.</p>
+    <div class="tbl" id="lvlTbl"></div></section>
+  <section class="grid2">
+    <div class="card"><h2>Where GDXU could close</h2><div id="rangeBox"></div></div>
+    <div class="card"><h2>Next hour</h2><div id="riskBox"></div></div>
+    <div class="card"><h2>Last session</h2><p id="lastBox"></p></div>
+  </section>
+</div>
+
+<div data-tab="gold" hidden>
+  <section class="card"><h2>What moved gold this week</h2><div id="drvBox"></div></section>
+  <section class="grid2">
+    <div class="card"><h2>Long-term trend</h2><div id="trendBox"></div></div>
+    <div class="card"><h2>Hedge-fund positioning</h2><div id="cotBox"></div><div id="cotCh"></div></div>
+    <div class="card"><h2>Options pricing</h2><div id="vrpBox"></div><div id="vrpCh"></div></div>
+  </section>
+  <section class="card"><h2>If gold moves</h2><p class="muted" id="goldIntro"></p>
+    <label for="goldSlider">Gold price in two weeks: <b id="goldVal"></b></label>
+    <input type="range" id="goldSlider"><div id="goldOut" style="margin-top:8px"></div></section>
+</div>
+
+<div data-tab="week" hidden>
+  <section class="card"><h2>Where GDXU could close by <span id="weekEnd"></span></h2>
+    <p id="wkSummary" class="muted"></p><div id="flagWeek"></div><div id="wkRuler"></div></section>
+  <section class="card"><h2>Six months, daily</h2><div id="chD"></div></section>
+  <section class="card"><h2>Size a position</h2>
+    <div class="form"><div><label for="pos">Position value ($)</label><input id="pos" type="number" value="10000"></div>
+    <div><label for="maxLoss">Largest weekly loss you would accept ($)</label><input id="maxLoss" type="number" value="1000"></div></div>
+    <div id="sizeOut" style="margin-top:10px"></div></section>
+</div>
+
+<div data-tab="trades" hidden>
+  <section class="card"><h2>Add a position</h2>
+    <p class="muted" style="font-size:.83rem">Stored only in this browser. Nothing is published.</p>
+    <div class="form">
+      <div><label for="tSide">Side</label><select id="tSide"><option value="1">Long</option><option value="-1">Short</option></select></div>
+      <div><label for="tEntry">Entry price</label><input id="tEntry" type="number" step="0.01"></div>
+      <div><label for="tQty">Shares</label><input id="tQty" type="number" step="1"></div>
+      <div><label for="tStop">Stop</label><input id="tStop" type="number" step="0.01"></div>
+      <div><label for="tTarget">Target</label><input id="tTarget" type="number" step="0.01"></div>
+      <div><label for="tNote">Note</label><input id="tNote" type="text"></div>
+      <div><button class="act" id="tAdd">Add</button></div>
+    </div></section>
+  <section class="card"><h2>Open positions</h2><div class="tbl" id="posTbl"></div><p class="muted" id="posNote" style="font-size:.83rem"></p></section>
+  <section class="card"><h2>Journal</h2><p id="jrSum"></p><div class="tbl" id="jrTbl"></div>
+    <p><button class="sm" id="jrExport">Export CSV</button></p></section>
+</div>
+
+<div data-tab="record" hidden>
+  <section class="card"><h2>Daily ranges</h2><p class="muted" id="dSum"></p><div class="tbl" id="dTbl"></div></section>
+  <section class="card"><h2>Weekly ranges</h2><p class="muted" id="wSum"></p><div class="tbl" id="wTbl"></div></section>
+  <section class="card"><h2>Levels experiment</h2><p class="muted" id="lvIntro"></p><div class="tbl" id="lvStats"></div></section>
+  <section class="card"><h2>Breakout experiment</h2><p class="muted" id="bIntro"></p><p id="bSum"></p><div class="tbl" id="bTbl"></div></section>
+</div>
+
+<div data-tab="about" hidden>
+  <section class="card"><h2>How to read this site</h2>
+  <p><span class="ev tested">TESTED</span> passed a test fixed in advance on years of data.
+  <span class="ev experiment">EXPERIMENT</span> being scored live, not yet trusted.
+  <span class="ev">CONTEXT</span> useful background, not a forecast.</p>
+  <p>What the research found: GDXU's and gold's <b>direction</b> could not be predicted from public data at any horizon
+  from 5 minutes to 2 weeks (price patterns, levels, macro drivers, seasonality, Fed days, positioning). What works is the
+  <b>size</b> of moves (volatility, next-hour risk, the pre-open gap), the translation from gold to GDXU, gold's slow
+  12-month trend as a backdrop, and the fact that gold options usually price more volatility than follows.</p>
+  <p id="aboutDrag"></p>
+  <p class="muted">Each range is wrong about one time in five. Rare events such as an early redemption of the ETN sit
+  outside any model. Nothing here is investment advice.</p></section>
+</div>
+</main>
+<script>
+const D = __DATA__;
+const $ = id => document.getElementById(id);
+const usd = v => v == null ? "n/a" : "$" + v.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const g0 = v => "$" + Math.round(v).toLocaleString("en-US");
+const pc = (v, d = 1) => (v >= 0 ? "+" : "") + (v * 100).toFixed(d) + "%";
+const NS = "http://www.w3.org/2000/svg";
+function mk(p, tag, a, t) { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]);
+  if (t !== undefined) e.textContent = t; p.appendChild(e); return e; }
+const tfmt = (ts, opt) => new Intl.DateTimeFormat("en-US", Object.assign({timeZone: "America/New_York"}, opt)).format(new Date(ts * 1000));
+const hm = ts => tfmt(ts, {hour: "2-digit", minute: "2-digit", hour12: false});
+const dayOf = ts => tfmt(ts, {weekday: "short", day: "2-digit", month: "short"});
+const rows = pairs => "<table>" + pairs.map(p => "<tr><td>" + p[0] + "</td><td>" + p[1] + "</td></tr>").join("") + "</table>";
+function erf(x) { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.3275911 * x);
+  return s * (1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x)); }
+const ncdf = x => 0.5 * (1 + erf(x / Math.SQRT2));
+const store = { get: (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } },
+                set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+
+// ---------- header, tabs ----------
+const L = D.day.live, P = D.day.pre, cur = L ? L.price : D.price;
+$("hPrice").textContent = usd(cur);
+$("hChange").innerHTML = L ? "<span class='" + (L.change >= 0 ? "upc" : "dn") + "'>" + pc(L.change) + "</span> today"
+  : "<span class='muted'>close " + D.asof + "</span>";
+$("hStatus").textContent = L ? "LIVE " + L.time + " NY" : P ? "PRE-OPEN" : "MARKET CLOSED";
+if (L) $("hStatus").classList.add("live");
+$("hUpd").textContent = D.updated;
+$("alertsTop").innerHTML = (D.alerts || []).map(a => "<div class='alert'><b>" + a.title + ".</b> " + a.msg + "</div>").join("");
+const TABS = [["live", "Live"], ["gold", "Gold"], ["week", "Week"], ["trades", "My trades"], ["record", "Track record"], ["about", "About"]];
+$("tabs").innerHTML = TABS.map(t => "<button role='tab' data-t='" + t[0] + "'>" + t[1] + "</button>").join("");
+function show(t) {
+  document.querySelectorAll("[data-tab]").forEach(d => d.hidden = d.dataset.tab !== t);
+  document.querySelectorAll("#tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.t === t));
+  store.set("gp_tab", t);
+}
+document.querySelectorAll("#tabs button").forEach(b => b.addEventListener("click", () => show(b.dataset.t)));
+show(store.get("gp_tab", "live"));
+
+// ---------- charts ----------
+function candleChart(box, bars, o) {
+  o = o || {}; box.innerHTML = "";
+  if (!bars || bars.length < 2) { box.innerHTML = "<p class='muted'>No chart data right now.</p>"; return; }
+  const W = 760, H = o.height || 300, Lm = 6, R = 64, T = 14, B = 26, n = bars.length;
+  const ys = []; bars.forEach(b => ys.push(b[2], b[3]));
+  const dLo = Math.min(...ys), dHi = Math.max(...ys), span = Math.max(dHi - dLo, dHi * 0.02);
+  o.lines = (o.lines || []).filter(l => { const ok = l.y > dLo - span * 1.2 && l.y < dHi + span * 1.2;
+    if (!ok && o.offNote) o.offNote.push(l.label + " " + (o.fmt || usd)(l.y)); return ok; });
+  o.bands = (o.bands || []).filter(b => { if (!b.label) return true; const ok = b.hi > dLo - span * 1.2 && b.lo < dHi + span * 1.2;
+    if (!ok && o.offNote) o.offNote.push(b.label + " " + (o.fmt || usd)((b.lo + b.hi) / 2)); return ok; });
+  o.bands.forEach(b => ys.push(b.lo, b.hi)); o.lines.forEach(l => ys.push(l.y));
+  let lo = Math.min(...ys), hi = Math.max(...ys); const pad = (hi - lo) * 0.05 || 1; lo -= pad; hi += pad;
+  const step = (W - Lm - R) / n, X = i => Lm + (i + 0.5) * step, Y = v => T + (hi - v) / (hi - lo) * (H - T - B);
+  const fp = o.fmt || usd;
+  const s = mk(box, "svg", {viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": o.label || "price chart"});
+  for (let k = 0; k <= 4; k++) { const v = lo + (hi - lo) * k / 4;
+    mk(s, "line", {x1: Lm, x2: W - R, y1: Y(v), y2: Y(v), stroke: "var(--rule)"});
+    mk(s, "text", {x: W - R + 6, y: Y(v) + 4}, fp(v)); }
+  const bandLab = [];
+  (o.bands || []).forEach(b => { let i0 = 0; if (b.from) { i0 = bars.findIndex(x => x[0] >= b.from); if (i0 < 0) i0 = 0; }
+    const x0 = i0 ? X(i0) - step / 2 : Lm;
+    mk(s, "rect", {x: x0, width: W - R - x0, y: Y(b.hi), height: Math.max(2, Y(b.lo) - Y(b.hi)), fill: b.fill});
+    if (b.label && !bandLab.some(u => Math.abs(u - Y(b.hi)) < 12)) { bandLab.push(Y(b.hi));
+      mk(s, "text", {x: W - R - 4, y: Y(b.hi) - 3, "text-anchor": "end", class: "lbl", style: "fill:" + (b.color || "var(--gold)")}, b.label); } });
+  let lastLab = "", lastX = -999;
+  const lab = (x, t, anchor) => { if (x - lastX < 70) return; mk(s, "text", {x: x, y: H - 8, "text-anchor": anchor || "start"}, t); lastX = x; };
+  bars.forEach((b, i) => {
+    if (o.daily) { const m = tfmt(b[0], {month: "short"}); if (m !== lastLab) { lab(X(i), m); lastLab = m; } return; }
+    const d = dayOf(b[0]);
+    if (d !== lastLab) { if (i) mk(s, "line", {x1: X(i) - step / 2, x2: X(i) - step / 2, y1: T, y2: H - B, stroke: "var(--rule)", "stroke-dasharray": "2 3"});
+      lastX = -999; lab(X(i), d); lastLab = d; }
+    else if (i % Math.ceil(n / 8) === 0) lab(X(i), hm(b[0]), "middle"); });
+  const bw = Math.max(1, step * 0.65);
+  bars.forEach((b, i) => { const up = b[4] >= b[1], c = up ? "var(--up)" : "var(--down)";
+    mk(s, "line", {x1: X(i), x2: X(i), y1: Y(b[2]), y2: Y(b[3]), stroke: c});
+    mk(s, "rect", {x: X(i) - bw / 2, width: bw, y: Y(Math.max(b[1], b[4])), height: Math.max(1, Math.abs(Y(b[1]) - Y(b[4]))), fill: c}); });
+  const used = [];
+  (o.lines || []).forEach(l => { mk(s, "line", {x1: Lm, x2: W - R, y1: Y(l.y), y2: Y(l.y), stroke: l.color || "var(--ink)", "stroke-dasharray": l.dash || "", "stroke-width": l.width || 1.4});
+    const ly = Y(l.y) - 4; if (used.some(u => Math.abs(u - ly) < 12)) return; used.push(ly);
+    mk(s, "text", {x: Lm + 4, y: ly, class: "lbl", style: "fill:" + (l.color || "var(--ink)")}, l.label + " " + fp(l.y)); });
+  (o.marks || []).forEach(m => { let i = bars.findIndex(b => b[0] >= m.t); if (i < 0) return;
+    mk(s, "line", {x1: X(i), x2: X(i), y1: T, y2: H - B, stroke: m.color || "var(--gold)", "stroke-width": 1.5});
+    mk(s, "text", {x: X(i) + 3, y: T + 10 + (m.row || 0) * 13, class: "lbl", style: "fill:" + (m.color || "var(--gold)")}, m.label); });
+  const cross = mk(s, "line", {x1: 0, x2: 0, y1: T, y2: H - B, stroke: "var(--muted)", visibility: "hidden"});
+  const tip = mk(s, "text", {x: Lm + 4, y: H - B - 6, class: "lbl", visibility: "hidden"});
+  const hit = mk(s, "rect", {x: Lm, y: T, width: W - Lm - R, height: H - T - B, fill: "transparent"});
+  const move = ev => { const r = s.getBoundingClientRect(), px = ((ev.touches ? ev.touches[0].clientX : ev.clientX) - r.left) * W / r.width;
+    const i = Math.max(0, Math.min(n - 1, Math.floor((px - Lm) / step))), b = bars[i];
+    cross.setAttribute("x1", X(i)); cross.setAttribute("x2", X(i)); cross.setAttribute("visibility", "visible");
+    tip.setAttribute("visibility", "visible");
+    tip.textContent = (o.daily ? tfmt(b[0], {day: "2-digit", month: "short"}) : dayOf(b[0]) + " " + hm(b[0])) +
+      "  O " + fp(b[1]) + "  H " + fp(b[2]) + "  L " + fp(b[3]) + "  C " + fp(b[4]); };
+  hit.addEventListener("mousemove", move); hit.addEventListener("touchmove", move, {passive: true});
+  hit.addEventListener("mouseleave", () => { cross.setAttribute("visibility", "hidden"); tip.setAttribute("visibility", "hidden"); });
+}
+function lineChart(box, series, o) {
+  o = o || {}; box.innerHTML = "";
+  const all = series.flatMap(s => s.pts); if (all.length < 2) return;
+  const W = o.width || 760, H = o.height || 170, Lm = 6, R = 50, T = 10, B = 22;
+  const t0 = Math.min(...all.map(p => p[0])), t1 = Math.max(...all.map(p => p[0]));
+  let lo = Math.min(...all.map(p => p[1])), hi = Math.max(...all.map(p => p[1])); const pad = (hi - lo) * 0.08 || 1; lo -= pad; hi += pad;
+  const X = t => Lm + (t - t0) / (t1 - t0) * (W - Lm - R), Y = v => T + (hi - v) / (hi - lo) * (H - T - B);
+  const s = mk(box, "svg", {viewBox: "0 0 " + W + " " + H, role: "img", "aria-label": o.label || "line chart"});
+  for (let k = 0; k <= 3; k++) { const v = lo + (hi - lo) * k / 3;
+    mk(s, "line", {x1: Lm, x2: W - R, y1: Y(v), y2: Y(v), stroke: "var(--rule)"}); mk(s, "text", {x: W - R + 5, y: Y(v) + 4}, v.toFixed(0) + (o.unit || "")); }
+  if (o.zero && lo < 0 && hi > 0) mk(s, "line", {x1: Lm, x2: W - R, y1: Y(0), y2: Y(0), stroke: "var(--muted)"});
+  for (let k = 0; k <= 4; k++) { const t = t0 + (t1 - t0) * k / 4;
+    mk(s, "text", {x: X(t), y: H - 6, "text-anchor": k === 0 ? "start" : k === 4 ? "end" : "middle"}, tfmt(t, {month: "short", year: "2-digit"})); }
+  series.forEach(se => mk(s, "polyline", {points: se.pts.map(p => X(p[0]) + "," + Y(p[1])).join(" "), fill: "none", stroke: se.color, "stroke-width": 1.6}));
+  box.insertAdjacentHTML("beforeend", "<div class='legend'>" + series.map(se => "<span><i style='background:" + se.color + "'></i>" + se.name + "</span>").join("") + "</div>");
+}
+
+// ---------- LIVE tab ----------
+const EV = {tested: "TESTED", experiment: "EXPERIMENT", context: "CONTEXT"};
+$("board").innerHTML = D.board.map(b => "<div class='card sig lv-" + b.level + "'><div class='row1'><span class='name'><span class='dot'></span>" +
+  b.name + "</span><span class='ev " + b.evidence + "'>" + EV[b.evidence] + "</span></div><div class='val'>" + b.value +
+  "</div><div class='det'>" + b.detail + "</div></div>").join("");
+const q = D.rest ? D.rest.q : D.day.q;
+const xbT = D.intraday.gdxu, lastDayT = xbT.length ? dayOf(xbT[xbT.length - 1][0]) : null;
+const bandFrom = D.rest && xbT.length ? xbT.find(b => dayOf(b[0]) === lastDayT)[0] : null;
+const xBands = [{lo: q[0], hi: q[4], fill: "var(--gold2)", from: bandFrom}, {lo: q[1], hi: q[3], fill: "var(--gold3)", from: bandFrom}];
+const xLines = [{y: D.price, label: "Prev close", color: "var(--muted)", dash: "4 3"}];
+if (P) xLines.push({y: P.open, label: "Likely open", color: "var(--gold)", dash: "2 2"});
+const xMarks = [];
+const xb = D.intraday.gdxu;
+if (xb.length) { const lastDay = dayOf(xb[xb.length - 1][0]); const first = xb.find(b => dayOf(b[0]) === lastDay);
+  const prevClose = xb.filter(b => dayOf(b[0]) !== lastDay).slice(-1)[0];
+  if (first && prevClose) xMarks.push({t: first[0], label: "Open " + pc(first[1] / prevClose[4] - 1), color: "var(--gold)"}); }
+candleChart($("chX"), xb, {bands: xBands, lines: xLines, marks: xMarks, height: 310, label: "GDXU 5-minute candles"});
+$("chXNote").textContent = "Shaded: " + (D.rest ? "where GDXU is likely to close today given the time left" :
+  "likely close range for " + D.day.target) + " (dark band 50%, light band 80%). Hover or touch the chart for prices.";
+const gLines = [], gMarks = [];
+if (D.brk && D.brk.watchLevel) gLines.push({y: D.brk.watchLevel, label: "Yesterday's high", color: "var(--gold)", dash: "4 3"});
+if (D.brk && D.brk.open) { gLines.push({y: D.brk.open.target, label: "Target", color: "var(--up)", dash: "2 2"});
+  gLines.push({y: D.brk.open.stop, label: "Invalidation", color: "var(--down)", dash: "2 2"}); }
+const LT = {swing: ["Swing zones", "#A97C14"], extreme: ["Recent highs/lows", "#5E6B78"], round: ["Round numbers", "#8A94A0"],
+  pivot: ["Weekly pivots", "#7A6FB0"], fib: ["Fibonacci", "#B0678C"], volume: ["Volume nodes", "#3F8FA8"], ma: ["Moving averages", "#6E8B3D"]};
+const LV = D.levels || [];
+const onT = store.get("gp_lvls", {swing: true, extreme: true, round: false, pivot: false, fib: false, volume: false, ma: false});
+$("lvlToggles").innerHTML = "<span class='muted'>Levels:</span>" + Object.keys(LT).filter(k => LV.some(l => l.type === k)).map(k =>
+  "<label><input type='checkbox' data-lt='" + k + "'" + (onT[k] ? " checked" : "") + "><span class='sw' style='background:" + LT[k][1] + "'></span>" + LT[k][0] + "</label>").join("");
+function drawGold() {
+  const act = LV.filter(l => onT[l.type]);
+  const zones = act.filter(l => l.type === "swing").map(l => ({lo: l.lo * 0.9995, hi: l.hi * 1.0005, fill: "rgba(169,124,20,.12)", label: l.label, color: LT.swing[1]}));
+  const lvLines = act.filter(l => l.type !== "swing").map(l => ({y: l.price, label: l.label, color: LT[l.type][1], dash: "3 3", width: 1.1}));
+  const gOff = [];
+  candleChart($("chG"), D.intraday.gold, {lines: gLines.concat(lvLines), bands: zones, marks: gMarks, height: 280, label: "Gold 5-minute candles",
+    offNote: gOff, fmt: v => "$" + Math.round(v).toLocaleString("en-US")});
+  $("chGNote").textContent = (gOff.length ? "Off this chart: " + gOff.join(", ") + ". " : "") +
+    "Tick level types above to show them. Gold explains most of GDXU's moves in the same hour, not the next one.";
+  candleChart($("chGD"), D.goldDaily, {daily: true, lines: lvLines, bands: zones, height: 300, label: "Gold daily candles with levels",
+    fmt: v => "$" + Math.round(v).toLocaleString("en-US")});
+}
+document.querySelectorAll("[data-lt]").forEach(c => c.addEventListener("change", () => { onT[c.dataset.lt] = c.checked; store.set("gp_lvls", onT); drawGold(); }));
+drawGold();
+const gNow = D.gold.now;
+$("lvlTbl").innerHTML = LV.length ? "<table><tr><th>Level</th><th>Type</th><th>Gold</th><th>Distance</th><th>GDXU if reached</th></tr>" +
+  LV.map(l => "<tr><td>" + (l.kind === "res" ? "Resistance" : "Support") + "</td><td><span class='sw' style='background:" + LT[l.type][1] +
+    "'></span> " + l.label + "</td><td>" + g0(l.price) + "</td><td class='" + (l.dist >= 0 ? "upc" : "dn") + "'>" + pc(l.dist) + "</td><td>" + usd(l.gdxu) + "</td></tr>").join("") + "</table>"
+  : "<p class='muted'>Levels unavailable this update.</p>";
+if (P) $("preBox").innerHTML = "<div class='flag'>Before the open: gold is <b>" + pc(P.goldMove) + "</b> since GDXU's last close. GDXU is likely to open around <b>" +
+  usd(P.open) + "</b> (8 in 10 opens between " + usd(P.openLo) + " and " + usd(P.openHi) + "). Priced in at the bell; says nothing about the rest of the day.</div>";
+$("rangeBox").innerHTML = "<p class='muted'>" + (D.rest ? Math.floor(D.rest.minsLeft / 60) + "h " + (D.rest.minsLeft % 60) + "m left today." :
+  "For " + D.day.target + ".") + (D.day.events.length ? " Scheduled: " + D.day.events.join(", ") + "." : "") + "</p>" +
+  rows([["1 in 10 below", usd(q[0])], ["1 in 4 below", usd(q[1])], ["Middle", usd(q[2])], ["1 in 4 above", usd(q[3])], ["1 in 10 above", usd(q[4])]]);
+$("riskBox").innerHTML = D.risk ? "<p>Gold's last hour: <b>" + D.risk.level + "</b> (" + pc(D.risk.goldMove) + ", volume " + D.risk.volRatio.toFixed(1) +
+  "x normal). GDXU's next hour likely <b>" + D.risk.mult.toFixed(1) + "x</b> normal size.</p>" +
+  rows([["8 in 10 next-hour prices from", usd(D.risk.q[0])], ["to", usd(D.risk.q[4])]]) :
+  "<p class='muted'>Shown during market hours from 10:30 New York time.</p>";
+const d_ = D.day;
+$("lastBox").innerHTML = "On " + d_.lastDate + " GDXU moved <b class='" + (d_.lastMove >= 0 ? "upc" : "dn") + "'>" + pc(d_.lastMove) +
+  "</b>, bigger than " + (d_.biggerThan * 100).toFixed(0) + "% of days relative to what the model expected" +
+  (d_.biggerThan >= 0.5 ? ", roughly a one-in-" + Math.round(1 / Math.max(0.001, 1 - d_.biggerThan)) + "-day move." : ", an ordinary day.");
+
+// ---------- GOLD tab ----------
+if (D.drivers) { const dr = D.drivers, parts = [["usd", "Dollar", "var(--up)"], ["real", "Real yields", "var(--gold)"]].filter(p => dr.contrib[p[0]] !== undefined);
+  const items = parts.map(p => [p[1], dr.contrib[p[0]], p[2]]).concat([["Gold's own flows", dr.other, "var(--muted)"]]);
+  const tot = items.reduce((a, b) => a + Math.abs(b[1]), 0) || 1;
+  $("drvBox").innerHTML = "<p>Gold moved <b class='" + (dr.week >= 0 ? "upc" : "dn") + "'>" + pc(dr.week) + "</b> over the last 5 trading days." +
+    " The dollar moved " + pc(dr.usdMove) + (dr.realMove !== null ? ", real yields " + (dr.realMove >= 0 ? "+" : "") + dr.realMove.toFixed(0) + " bp" : "") + ".</p>" +
+    "<div class='bar'>" + items.map(it => "<span title='" + it[0] + "' style='width:" + (Math.abs(it[1]) / tot * 100) + "%;background:" + it[2] + ";opacity:" + (it[1] >= 0 ? 1 : .55) + "'></span>").join("") + "</div>" +
+    "<div class='legend'>" + items.map(it => "<span><i style='background:" + it[2] + "'></i>" + it[0] + " " + (it[1] >= 0 ? "+" : "") + (it[1] * 100).toFixed(1) + " pts</span>").join("") + "</div>" +
+    "<p class='muted' style='font-size:.83rem'>Based on the last two years, these drivers explain about " + (dr.r2 * 100).toFixed(0) +
+    "% of gold's weekly moves. The rest is central-bank, Asian and ETF demand. This explains; it does not forecast.</p>"; }
+else $("drvBox").innerHTML = "<p class='muted'>Driver data unavailable this update.</p>";
+if (D.trend) $("trendBox").innerHTML = rows([["Gold, last 12 months", pc(D.trend.m12, 0)], ["Gold, last 6 months", pc(D.trend.m6, 0)]]) +
+  "<p class='muted' style='font-size:.83rem'>After up years, gold's next month averaged +1.0% vs +0.5% after down years (2001-2026). " +
+  "Real but slow, did not beat simply holding gold, and did not carry over to miners.</p>";
+if (D.cot) { $("cotBox").innerHTML = "<p>Managed money: <b>" + (D.cot.net * 100).toFixed(0) + "% net long</b>, " + (D.cot.z >= 0 ? "+" : "") + D.cot.z.toFixed(1) +
+  " standard deviations vs 3 years (" + D.cot.date + "). Not predictive in testing.</p>";
+  lineChart($("cotCh"), [{name: "Net long, % of open interest", color: "var(--gold)", pts: D.cot.series}], {unit: "%", label: "positioning", width: 420, height: 190}); }
+else $("cotBox").innerHTML = "<p class='muted'>Positioning data unavailable this update.</p>";
+if (D.vrp) { $("vrpBox").innerHTML = "<p>Gold options price <b>" + D.vrp.gvz.toFixed(1) + "%</b> volatility; our forecast is <b>" + D.vrp.ours.toFixed(1) +
+  "%</b>. Historically options ran about " + D.vrp.typical.toFixed(1) + " points above what followed, in " + (D.vrp.share * 100).toFixed(0) +
+  "% of months, with rare large misses. Buying options usually overpays; selling carries crash risk.</p>";
+  lineChart($("vrpCh"), [{name: "Options (GVZ)", color: "var(--gold)", pts: D.vrp.series.map(p => [p[0], p[1]])},
+    {name: "Actual, last 21 days", color: "var(--up)", pts: D.vrp.series.map(p => [p[0], p[2]])}], {unit: "%", label: "implied vs actual volatility", width: 420, height: 190}); }
+(function () { const G = D.gold, sl = $("goldSlider");
+  sl.min = Math.round(G.now * 0.9 / 10) * 10; sl.max = Math.round(G.now * 1.1 / 10) * 10; sl.step = 10; sl.value = Math.round(G.now / 10) * 10;
+  $("goldIntro").textContent = "Gold is at " + usd(G.now) + ". Miners have moved about " + G.beta.toFixed(1) + "x gold, which explains " +
+    (G.r2 * 100).toFixed(0) + "% of their two-week moves.";
+  const sd = G.gvz * Math.sqrt(G.days / 252);
+  const upd = () => { const gp = +sl.value, x = Math.log(gp / G.now), base = G.alpha + G.beta * x;
+    const [lo, mid, hi] = G.q.map(qq => D.price * Math.exp(3 * (base + qq) - G.decay - G.drag));
+    $("goldVal").textContent = usd(gp) + " (" + pc(gp / G.now - 1) + ")";
+    $("goldOut").innerHTML = "GDXU most likely around <b>" + usd(mid) + "</b> (" + pc(mid / D.price - 1) + "), 8 in 10 between " + usd(lo) + " and " + usd(hi) +
+      ". <span class='muted'>Options put the chance of gold at or above this at about " + ((1 - ncdf((x + sd * sd / 2) / sd)) * 100).toFixed(0) + "%.</span>"; };
+  sl.addEventListener("input", upd); upd(); })();
+
+// ---------- WEEK tab ----------
+$("weekEnd").textContent = D.weekEnd;
+$("wkSummary").textContent = "From " + usd(D.price) + ". Typical 5-day move about " + (D.vol * 100).toFixed(0) + "% either way. " +
+  (D.events.length ? "Scheduled: " + D.events.join(", ") + "." : "No major releases scheduled.") +
+  " Shaded: where GDXU is likely to close by " + D.weekEnd + " (dark 50%, light 80%); red line: a 1-in-10 dip during the week.";
+if (D.bigWeek.flag) $("flagWeek").innerHTML = "<div class='flag'>Gold's week was in its top 20% (" + pc(D.bigWeek.ret) + "). GDXU has tended to give back ground after such weeks; untested, tracked live.</div>";
+candleChart($("wkRuler"), D.daily.slice(-30), {daily: true, height: 240, label: "last 30 days with weekly range",
+  bands: [{lo: D.closeQ[0], hi: D.closeQ[4], fill: "var(--gold2)"}, {lo: D.closeQ[1], hi: D.closeQ[3], fill: "var(--gold3)"}],
+  lines: [{y: D.lowQ[0], label: "1-in-10 dip", color: "var(--down)", dash: "4 3"}]});
+candleChart($("chD"), D.daily, {daily: true, height: 280, label: "GDXU daily candles, six months"});
+(function () { const bad = D.closeQ[0] / D.price - 1, dip = D.lowQ[0] / D.price - 1;
+  const upd = () => { const pos = +$("pos").value || 0, ml = +$("maxLoss").value || 0;
+    $("sizeOut").innerHTML = "In a 1-in-10 bad week, " + usd(pos) + " could close down about <b class='dn'>" + usd(pos * Math.abs(bad)) +
+      "</b> (" + pc(bad) + ") and dip " + usd(pos * Math.abs(dip)) + " along the way. To keep that under " + usd(ml) + ", hold about <b>" +
+      usd(ml / Math.abs(bad)) + "</b> or less at this week's volatility."; };
+  ["pos", "maxLoss"].forEach(i => $(i).addEventListener("input", upd)); upd(); })();
+
+// ---------- TRADES tab ----------
+const sigClose = D.rest ? D.rest.sig : D.day.vol;
+function odds(side, stop, target) {
+  const n = 3000, steps = 50, sd = sigClose / Math.sqrt(steps); let t = 0, s = 0;
+  for (let i = 0; i < n; i++) { let lp = Math.log(cur);
+    for (let k = 0; k < steps; k++) { const u = Math.random() || 1e-9, v = Math.random();
+      lp += sd * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); const p = Math.exp(lp);
+      if (target && (side > 0 ? p >= target : p <= target)) { t++; break; }
+      if (stop && (side > 0 ? p <= stop : p >= stop)) { s++; break; } } }
+  return [t / n, s / n];
+}
+function renderTrades() {
+  const pos = store.get("gp_pos", []), jr = store.get("gp_jr", []);
+  $("posTbl").innerHTML = pos.length ? "<table><tr><th>Position</th><th>Entry</th><th>Now</th><th>P&amp;L</th><th>Stop / target</th><th>Target first</th><th>Stop first</th><th></th></tr>" +
+    pos.map((p, i) => { const pnl = p.side * (cur - p.entry) * p.qty, [ot, os] = odds(p.side, p.stop, p.target);
+      return "<tr><td>" + (p.side > 0 ? "Long " : "Short ") + p.qty + (p.note ? " <span class='muted'>" + p.note + "</span>" : "") + "</td><td>" + usd(p.entry) +
+        "</td><td>" + usd(cur) + "</td><td class='" + (pnl >= 0 ? "upc" : "dn") + "'>" + usd(pnl) + " (" + pc(p.side * (cur / p.entry - 1)) + ")</td><td>" +
+        (p.stop ? usd(p.stop) : "-") + " / " + (p.target ? usd(p.target) : "-") + "</td><td>" + (p.target ? (ot * 100).toFixed(0) + "%" : "-") + "</td><td>" +
+        (p.stop ? (os * 100).toFixed(0) + "%" : "-") + "</td><td><button class='sm' data-close='" + i + "'>Close</button> <button class='sm' data-del='" + i + "'>Delete</button></td></tr>"; }).join("") + "</table>"
+    : "<p class='muted'>No open positions.</p>";
+  $("posNote").textContent = "Odds are to " + (D.rest ? "today's close" : "the next session's close") + " at current volatility, with no view on direction. " +
+    "Holding costs about " + (D.decayDay * 100).toFixed(2) + "% a day for a long position at today's volatility, even if gold goes nowhere.";
+  document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => { const i = +b.dataset.close, p = pos[i];
+    const ex = parseFloat(prompt("Exit price", cur.toFixed(2))); if (!(ex > 0)) return;
+    jr.push(Object.assign({}, p, {exit: ex, closed: new Date().toISOString().slice(0, 10), pnl: p.side * (ex - p.entry) * p.qty}));
+    pos.splice(i, 1); store.set("gp_pos", pos); store.set("gp_jr", jr); renderTrades(); });
+  document.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { if (!confirm("Delete this position without logging it?")) return;
+    pos.splice(+b.dataset.del, 1); store.set("gp_pos", pos); renderTrades(); });
+  const wins = jr.filter(j => j.pnl > 0), losses = jr.filter(j => j.pnl <= 0), tot = jr.reduce((a, j) => a + j.pnl, 0);
+  $("jrSum").innerHTML = jr.length ? jr.length + " closed trades, " + wins.length + " winners. Total <b class='" + (tot >= 0 ? "upc" : "dn") + "'>" + usd(tot) + "</b>." +
+    (wins.length ? " Average win " + usd(wins.reduce((a, j) => a + j.pnl, 0) / wins.length) + "." : "") +
+    (losses.length ? " Average loss " + usd(losses.reduce((a, j) => a + j.pnl, 0) / losses.length) + "." : "") : "<span class='muted'>No closed trades yet.</span>";
+  $("jrTbl").innerHTML = jr.length ? "<table><tr><th>Closed</th><th>Side</th><th>Shares</th><th>Entry</th><th>Exit</th><th>P&amp;L</th><th>Note</th></tr>" +
+    jr.slice().reverse().map(j => "<tr><td>" + j.closed + "</td><td>" + (j.side > 0 ? "Long" : "Short") + "</td><td>" + j.qty + "</td><td>" + usd(j.entry) + "</td><td>" +
+      usd(j.exit) + "</td><td class='" + (j.pnl >= 0 ? "upc" : "dn") + "'>" + usd(j.pnl) + "</td><td>" + (j.note || "") + "</td></tr>").join("") + "</table>" : "";
+}
+$("tEntry").value = cur.toFixed(2);
+$("tAdd").onclick = () => { const p = {side: +$("tSide").value, entry: +$("tEntry").value, qty: +$("tQty").value, stop: +$("tStop").value || null,
+    target: +$("tTarget").value || null, note: $("tNote").value.trim(), opened: new Date().toISOString().slice(0, 10)};
+  if (!(p.entry > 0 && p.qty > 0)) { alert("Enter an entry price and a number of shares."); return; }
+  const pos = store.get("gp_pos", []); pos.push(p); store.set("gp_pos", pos); ["tQty", "tStop", "tTarget", "tNote"].forEach(i => $(i).value = ""); renderTrades(); };
+$("jrExport").onclick = () => { const jr = store.get("gp_jr", []); if (!jr.length) return;
+  const csv = "closed,side,shares,entry,exit,pnl,note\n" + jr.map(j => [j.closed, j.side > 0 ? "long" : "short", j.qty, j.entry, j.exit, j.pnl.toFixed(2), '"' + (j.note || "") + '"'].join(",")).join("\n");
+  const a = document.createElement("a"); a.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv); a.download = "gdxu_journal.csv"; a.click(); };
+renderTrades();
+
+// ---------- RECORD tab ----------
+(function () { const dl = D.day.log, done = dl.filter(r => r.close !== null);
+  $("dSum").textContent = done.length ? done.length + " days scored: " + (done.filter(r => r.in80).length / done.length * 100).toFixed(0) +
+    "% closed inside the 80% range (target 80%), " + (done.filter(r => r.in50).length / done.length * 100).toFixed(0) + "% inside the 50% band (target 50%)." : "No days scored yet.";
+  $("dTbl").innerHTML = "<table><tr><th>Day</th><th>Prior close</th><th>80% range</th><th>Close</th></tr>" + dl.slice().reverse().slice(0, 25).map(r =>
+    "<tr><td>" + r.target + "</td><td>" + usd(r.price) + "</td><td>" + usd(r.p10) + " to " + usd(r.p90) + "</td><td>" + (r.close === null ? "pending" :
+    "<span class='" + (r.in80 ? "upc" : "dn") + "'>" + usd(r.close) + "</span>") + "</td></tr>").join("") + "</table>";
+  const wl = D.log, wd = wl.filter(r => r.close5 !== null);
+  $("wSum").textContent = wd.length ? wd.length + " weeks scored: " + (wd.filter(r => r.in_range).length / wd.length * 100).toFixed(0) + "% inside the 80% range, dip held " +
+    (wd.filter(r => r.low_held).length / wd.length * 100).toFixed(0) + "% (target 90%)." : "No weeks scored yet.";
+  $("wTbl").innerHTML = "<table><tr><th>Week of</th><th>Price</th><th>80% range</th><th>Close +5d</th><th>Dip floor</th><th>Lowest</th></tr>" + wl.slice().reverse().slice(0, 15).map(r =>
+    "<tr><td>" + r.asof + (r.big ? " *" : "") + "</td><td>" + usd(r.price) + "</td><td>" + usd(r.p10) + " to " + usd(r.p90) + "</td><td>" + (r.close5 === null ? "pending" :
+    "<span class='" + (r.in_range ? "upc" : "dn") + "'>" + usd(r.close5) + "</span>") + "</td><td>" + usd(r.low10) + "</td><td>" + (r.low5 === null ? "pending" :
+    "<span class='" + (r.low_held ? "upc" : "dn") + "'>" + usd(r.low5) + "</span>") + "</td></tr>").join("") + "</table>";
+  const S = D.lvlStats;
+  if (S) { $("lvIntro").textContent = "Since " + S.start + " (" + S.days + " days logged). When gold reaches a level: rejected = moved 0.5% back away, " +
+      "broke = closed 0.3% through, within 6 hours. Fake levels sit 0.4% away. If real levels reject clearly more often than fake ones, they matter.";
+    const rate = x => (x && x.reject + x.break) ? (x.reject / (x.reject + x.break) * 100).toFixed(0) + "% (" + (x.reject + x.break) + ")" : "-";
+    $("lvStats").innerHTML = "<table><tr><th>Type</th><th>Touched</th><th>Real: rejected</th><th>Fake: rejected</th></tr>" +
+      Object.keys(S.types).map(k => { const r = S.types[k].real, f = S.types[k].fake;
+        return "<tr><td>" + ((LT[k] || [k])[0]) + "</td><td>" + (r ? r.touched : 0) + "</td><td>" + rate(r) + "</td><td>" + rate(f) + "</td></tr>"; }).join("") +
+      "</table><p class='muted' style='font-size:.83rem'>Numbers in brackets are decided cases. Wait for at least 30 per type before reading anything into it.</p>"; }
+  else $("lvIntro").textContent = "Starts logging on the next update.";
+  const B = D.brk; if (!B) return;
+  $("bIntro").textContent = "Rule fixed in advance: when gold closes an hour above the previous day's high, call gold $50 above that level before $50 below it, within 24 hours.";
+  $("bSum").innerHTML = B.liveN >= 20 ? "Since " + B.start + ": " + B.liveN + " scored, " + B.liveTargets + " hit target first, " + B.liveStops + " invalidated. Gold's average 24h move after a call <b>" +
+    pc(B.liveMove, 2) + "</b> vs " + pc(B.drift, 2) + " after any hour." : "Since " + B.start + ": " + B.calls.length + " calls (" + B.liveTargets + " target first, " + B.liveStops +
+    " invalidated, " + B.liveExpired + " expired). About 20 are needed to judge. In testing: " + (B.histMove === null ? "n/a" : pc(B.histMove, 2)) + " vs " + pc(B.drift, 2) + ".";
+  const lab = {target: "target first", invalidated: "invalidated", expired: "expired", open: "open", tie: "same hour"};
+  $("bTbl").innerHTML = B.calls.length ? "<table><tr><th>Call (NY)</th><th>Level</th><th>Target / invalidation</th><th>Outcome</th><th>24h gold</th></tr>" +
+    B.calls.slice().reverse().map(c => "<tr><td>" + c.time + "</td><td>" + g0(c.level) + "</td><td>" + g0(c.target) + " / " + g0(c.stop) + "</td><td>" + lab[c.status] +
+    "</td><td>" + (c.move === null ? "pending" : "<span class='" + (c.move > 0 ? "upc" : "dn") + "'>" + pc(c.move, 2) + "</span>") + "</td></tr>").join("") + "</table>" : "";
+})();
+$("aboutDrag").textContent = "Holding GDXU has cost about " + (D.dragYear * 100).toFixed(0) + "% a year versus three times the index, plus volatility decay. It is built for short holds.";
+
+// refresh every 5 minutes unless you are typing
+setInterval(() => { const a = document.activeElement; if (!a || !["INPUT", "SELECT"].includes(a.tagName)) location.reload(); }, 300000);
+</script></body></html>
